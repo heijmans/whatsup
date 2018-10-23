@@ -1,4 +1,4 @@
-const { User } = require("./index");
+import User from "./user.model";
 
 describe("user", () => {
   beforeAll(async () => {

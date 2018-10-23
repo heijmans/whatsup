@@ -4,6 +4,11 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/express": "^4.16.0",
+    "@types/express-jwt": "^0.0.40",
+    "@types/jest": "^23.3.7",
+    "@types/jsonwebtoken": "^7.2.8",
     "bcrypt": "^3.0.2",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
@@ -15,22 +20,27 @@
     "pq": "^0.0.3",
     "prettier": "^1.14.3",
     "pretty-quick": "^1.8.0",
+    "reflect-metadata": "^0.1.12",
     "sequelize": "^4.41.0",
     "sequelize-cli": "^5.2.0",
+    "sequelize-typescript": "^0.6.6",
+    "ts-jest": "^23.10.4",
     "ts-node": "^7.0.1",
     "typescript": "^3.1.3"
   },
   "scripts": {
     "test": "jest --forceExit --detectOpenHandles --watch",
-    "mon": "",
-    "server": "",
+    "mon": "nodemon -w src -e ts,js -x 'yarn server'",
+    "server": "ts-node src/server.ts",
     "pq": "yarn pretty-quick",
     "prettier": "prettier --write 'src/**/*.ts' 'src/**/*.js*' '*.js*'"
   },
   "jest": {
     "clearMocks": true,
     "coverageDirectory": "tmp/coverage",
+    "preset": "ts-jest",
     "rootDir": "src",
+    "setupFiles": ["<rootDir>/testSetup.ts"],
     "testEnvironment": "node"
   },
   "prettier": {

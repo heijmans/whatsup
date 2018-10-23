@@ -1,28 +1,37 @@
-const express = require("express");
-const expressJwt = require("express-jwt");
-const bodyParser = require("body-parser");
-const { User } = require("./models");
-const fs = require("fs");
-const jwt = require("jsonwebtoken");
+import express from "express";
+import expressJwt from "express-jwt";
+import bodyParser from "body-parser";
+import "./models/db";
+import User from "./models/user.model";
+import jwt from "jsonwebtoken";
+import secrets from "./config/secrets";
+
+interface IUserRegister {
+  username: string;
+  password: string;
+}
+
+interface IUserLogin {
+  username: string;
+  password: string;
+}
 
 const app = express();
 app.use(bodyParser.json());
 
-const jwtSecret = JSON.parse(fs.readFileSync(__dirname + "/config/secrets.json"))["jwt"];
-
 app.use(
-  expressJwt({ secret: jwtSecret }).unless({
+  expressJwt({ secret: secrets.jwt }).unless({
     path: ["/user/register", "/user/login"],
   }),
 );
 
-function cleanUser({ id, username }) {
+function cleanUser({ id, username }: User) {
   return { id, username };
 }
 
 app.get("/user", (req, res) => {
   const { userId } = req.user;
-  User.findByPk(userId)
+  User.findById(userId)
     .then((user) => {
       if (user) {
         res.send(cleanUser(user));
@@ -36,7 +45,7 @@ app.get("/user", (req, res) => {
 });
 
 app.post("/user/register", (req, res) => {
-  const { username, password } = req.body;
+  const { username, password }: IUserRegister = req.body;
   User.create({ username, password })
     .then((user) => {
       res.json(cleanUser(user));
@@ -47,11 +56,11 @@ app.post("/user/register", (req, res) => {
 });
 
 app.post("/user/login", (req, res) => {
-  const { username, password } = req.body;
+  const { username, password }: IUserLogin = req.body;
   User.findOne({ where: { username } })
     .then((user) => {
       if (user && user.validatePassword(password)) {
-        const token = jwt.sign({ userId: user.id }, jwtSecret, {
+        const token = jwt.sign({ userId: user.id }, secrets.jwt, {
           expiresIn: "1h",
         });
         res.send({ success: true, token });
@@ -64,4 +73,5 @@ app.post("/user/login", (req, res) => {
     });
 });
 
+console.log("http://localhost:4000");
 app.listen(4000);
