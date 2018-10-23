@@ -15,6 +15,7 @@ paths:
           description: ""
           schema:
             $ref: "#/definitions/User"
+  /user/register:
     post:
       summary: register a user
       description: ""
@@ -52,14 +53,6 @@ paths:
           description: success
         401:
           description: failed
-  /user/logout:
-    post:
-      summary: logout
-      description: ""
-      operationId: logout      
-      responses:
-        200:
-          description: success
 
   /chats:
     get:
