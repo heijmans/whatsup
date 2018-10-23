@@ -29,18 +29,21 @@
     "typescript": "^3.1.3"
   },
   "scripts": {
-    "test": "jest --forceExit --detectOpenHandles --watch",
+    "migrate": "sequelize db:migrate",
     "mon": "nodemon -w src -e ts,js -x 'yarn server'",
-    "server": "ts-node src/server.ts",
     "pq": "yarn pretty-quick",
-    "prettier": "prettier --write 'src/**/*.ts' 'src/**/*.js*' '*.js*'"
+    "prettier": "prettier --write 'src/**/*.ts' 'src/**/*.js*' '*.js*' 'config/*.js*'",
+    "server": "ts-node src/server.ts",
+    "test": "jest --forceExit --detectOpenHandles --watch"
   },
   "jest": {
     "clearMocks": true,
     "coverageDirectory": "tmp/coverage",
     "preset": "ts-jest",
     "rootDir": "src",
-    "setupFiles": ["<rootDir>/testSetup.ts"],
+    "setupFiles": [
+      "<rootDir>/testSetup.ts"
+    ],
     "testEnvironment": "node"
   },
   "prettier": {

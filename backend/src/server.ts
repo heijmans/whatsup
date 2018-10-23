@@ -4,7 +4,7 @@ import bodyParser from "body-parser";
 import "./models/db";
 import User from "./models/user.model";
 import jwt from "jsonwebtoken";
-import secrets from "./config/secrets";
+import secrets from "../config/secrets.json";
 
 interface IUserRegister {
   username: string;
