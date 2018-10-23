@@ -3,6 +3,7 @@ import expressJwt from "express-jwt";
 import bodyParser from "body-parser";
 import secrets from "../config/secrets.json";
 import "./models/db";
+import chatController from "./controllers/chat.controller";
 import userController from "./controllers/user.controller";
 
 const app = express();
@@ -16,6 +17,7 @@ if (1 > 2) {
   );
 }
 
+app.use("/chats", chatController);
 app.use("/user", userController);
 
 console.log("http://localhost:4000");
