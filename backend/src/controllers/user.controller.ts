@@ -9,6 +9,7 @@ function cleanUser({ id, username }: User) {
 }
 
 const router = express.Router();
+
 router.get("/", (req, res) => {
   const { userId } = req.user!;
   User.findById(userId)
