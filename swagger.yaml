@@ -1,4 +1,4 @@
-openapi: "3.0.0"
+swagger: "2.0"
 info:
   version: "0.1.0"
   title: whatsup
@@ -6,139 +6,180 @@ paths:
   /user:
     get:
       summary: get user profile
+      description: ""
       operationId: getUser
+      produces:
+      - application/json
       responses:
         200:
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
+          description: ""
+          schema:
+            $ref: "#/definitions/User"
     post:
       summary: register a user
+      description: ""
       operationId: registerUser
-      requestBody:
+      consumes:
+      - application/json
+      parameters:
+      - name: body
+        in: body
         required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                password:
-                  type: string
-              required:
-                - username
-                - password
+        schema:
+          $ref: "#/definitions/UserRegister"
+      produces:
+      - application/json
       responses:
         200:
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
+          description: ""
+          schema:
+            $ref: "#/definitions/User"
   /user/login:
     post:
       summary: login
-      requestBody:
+      description: ""
+      operationId: login
+      consumes:
+      - application/json
+      parameters:
+      - name: body
+        in: body
         required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                password:
-                  type: string
-              required:
-                - username
-                - password
+        schema:
+          $ref: "#/definitions/UserLogin"
+      responses:
+        200:
+          description: success
+        401:
+          description: failed
   /user/logout:
     post:
       summary: logout
+      description: ""
+      operationId: logout      
+      responses:
+        200:
+          description: success
 
   /chats:
     get:
       summary: get all chats
+      description: ""
       operationId: listChats
+      produces:
+      - application/json
       responses:
         200:
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Chats"
+          description: ""
+          schema:
+            $ref: "#/definitions/Chats"
     post:
       summary: create a chat
+      description: ""
       operationId: createChat
-      requestBody:
+      consumes:
+      - application/json
+      parameters:
+      - name: body
+        in: body
         required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-              required:
-                - name
+        schema:
+          $ref: "#/definitions/ChatCreate"
+      produces:
+      - application/json
       responses:
         200:
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Chat"
-  /chats/{id}
+          description: ""
+          schema:
+            $ref: "#/definitions/Chat"
+  "/chats/{id}":
     get:
       summary: get a chat
+      description: ""
       operationId: getChat
       parameters:
       - name: id
         in: path
+        description: chat id
         required: true
-        schema:
-          type: integer
-          format: int64
+        type: integer
+        format: int64
+      produces:
+      - application/json
       responses:
         200:
-          content:
-            application/json
-              schema:
-                $ref: "#/components/schemas/Chat"
+          description: ""
+          schema:
+            $ref: "#/definitions/Chat"
     delete:
       summary: delete a char
+      description: ""
       operationId: deleteChat
       parameters:
       - name: id
         in: path
+        description: chat id
         required: true
-        schema:
-          type: integer
-          format: int64
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: ""
 
-components:
-  schemas:
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        username:
-          type: string
-        password:
-          type: string
-      required:
-        - id
-        - username
-        - password
-    Chat:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-      required:
-        - id
-        - name
+definitions:
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      username:
+        type: string
+      password:
+        type: string
+    required:
+      - id
+      - username
+      - password
+  UserRegister:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+    required:
+      - username
+      - password
+  UserLogin:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+    required:
+      - username
+      - password
+  Chats:
+    type: array
+    items:
+      $ref: "#/definitions/Chat"
+  Chat:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+    required:
+      - id
+      - name
+  ChatCreate:
+    type: object
+    properties:
+      name:
+        type: string
+    required:
+      - name

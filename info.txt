@@ -26,3 +26,7 @@ fix the tablename, allownull, unique, indexes
 
 yarn sequelize db:migrate
 yarn sequelize db:migrate:undo
+
+
+error in yaml:
+ruby -e "require('yaml'); YAML.load_file('../swagger.yaml')"
