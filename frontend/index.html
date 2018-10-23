@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script type = "text/javascript">
+
+      function log(message) {
+        document.getElementById("log").textContent += "\n" + message;
+      }
+
+      let id = 0;
+
+      function runWebSocketTest() {
+        const ws = new WebSocket("ws://localhost:4000/echo");
+    
+        ws.onopen = function() {
+          ws.send("message " + (id ++));
+          log("message is sent");
+        };
+
+        ws.onmessage = function (event) { 
+          log("message is received: " + event.data);
+        };
+
+        ws.onclose = function() { 
+          log("connection is closed"); 
+        };
+      }
+    </script>
+   </head>
+  <body>
+    <div>
+      <a href="javascript:runWebSocketTest()">Run WebSocket Test</a>
+    </div>
+    <pre id="log"></pre>
+   </body>
+</html>
