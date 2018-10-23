@@ -30,3 +30,10 @@ yarn sequelize db:migrate:undo
 
 error in yaml:
 ruby -e "require('yaml'); YAML.load_file('../swagger.yaml')"
+
+
+
+http POST :4000/user/register username=jan password=test
+http POST :4000/user/login username=jan password=test
+
+http :4000/user Authorization:"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImlhdCI6MTU0MDMyNDYxNywiZXhwIjoxNTQwMzI4MjE3fQ.YgBL31E3J9eCXDWpYJrbXR_dQM04i5nv_0v_Rdtg774"
