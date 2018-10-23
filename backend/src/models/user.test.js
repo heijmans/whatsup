@@ -13,6 +13,8 @@ describe("user", () => {
 
   it("should validate a plain password", async () => {
     const user = await User.create({ username: "kees", password: "veilig"});
+    expect(user.password).toMatch(/^\$2b\$/);
     expect(user.validatePassword("veilig")).toBe(true);
+    expect(user.validatePassword("other")).toBe(false);
   });
 });
