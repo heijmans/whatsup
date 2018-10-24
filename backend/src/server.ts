@@ -11,6 +11,9 @@ const app = express();
 app.use(bodyParser.json());
 expressWs(app);
 
+// import this after expressWs has setup the app
+import wsController from "./controllers/ws.controller";
+
 if (1 > 2) {
   app.use(
     expressJwt({ secret: secrets.jwt }).unless({
@@ -21,16 +24,7 @@ if (1 > 2) {
 
 app.use("/chats", chatController);
 app.use("/user", userController);
-
-const wsRouter = express.Router();
-wsRouter.ws("/", (ws, _) => {
-  ws.on("message", (msg) => {
-    console.log("echo msg", msg);
-    ws.send(msg);
-    ws.close();
-  });
-});
-app.use("/echo", wsRouter);
+app.use("/ws", wsController);
 
 console.log("http://localhost:4000");
 app.listen(4000);

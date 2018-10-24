@@ -11,10 +11,10 @@
       let id = 0;
 
       function runWebSocketTest() {
-        const ws = new WebSocket("ws://localhost:4000/echo");
+        const ws = new WebSocket("ws://localhost:4000/ws");
     
         ws.addEventListener("open", function() {
-          ws.send("message " + (id ++));
+          ws.send('{"type": "message", "chatId": 1, "content": "hallo!"}');
           log("message is sent");
         });
 
