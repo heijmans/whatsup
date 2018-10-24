@@ -47,8 +47,8 @@ interface IUserLogin {
 router.post("/login", async (req, res) => {
   try {
     const { username, password }: IUserLogin = req.body;
-    const user = await User.findOne({ where: { username } });
-    if (user && user.validatePassword(password)) {
+    const user = await User.login(username, password);
+    if (user) {
       const token = jwt.sign({ userId: user.id }, secrets.jwt, {
         expiresIn: "1h",
       });

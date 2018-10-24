@@ -18,4 +18,9 @@ export default class User extends Model<User> {
   validatePassword(password: string) {
     return bcrypt.compareSync(password, this.password);
   }
+
+  static async login(username: string, password: string): Promise<User | undefined> {
+    const user = await User.findOne({ where: { username } });
+    return user && user.validatePassword(password) ? user : undefined;
+  }
 }
