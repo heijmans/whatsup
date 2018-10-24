@@ -65,6 +65,7 @@ export function registerUser(username: string, password: string): SimpleThunkAct
     dispatch(requestRegisterUser(username, password));
     const user = await userService.register(username, password);
     dispatch(receiveRegisterUser(user));
+    dispatch(loginUser(username, password));
   };
 }
 
