@@ -59,7 +59,7 @@ export function receiveCreateChat(data: IChat): IReceiveCreateChat {
   return { type: RECEIVE_CREATE_CHAT, data };
 }
 
-export function fetchCreateChat(name: string): SimpleThunkAction<IState> {
+export function createChat(name: string): SimpleThunkAction<IState> {
   return async (dispatch, getState) => {
     const token = getTokenOrThrow(getState());
     dispatch(requestCreateChat(name));
@@ -93,7 +93,7 @@ export function receiveDeleteChat(id: number): IReceiveDeleteChat {
   return { type: RECEIVE_DELETE_CHAT, id };
 }
 
-export function fetchDeleteChat(id: number): SimpleThunkAction<IState> {
+export function deleteChat(id: number): SimpleThunkAction<IState> {
   return async (dispatch, getState) => {
     const token = getTokenOrThrow(getState());
     dispatch(requestDeleteChat(id));
