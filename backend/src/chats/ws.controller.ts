@@ -45,11 +45,11 @@ function removeClient(client: IClient) {
 function handleAction(client: IClient, action: Action) {
   if (action.type === "MESSAGE") {
     action = { ...action, from: client.user.username };
-    const msg = JSON.stringify(action);
-    clients.forEach(({ ws }) => {
-      ws.send(msg);
-    });
   }
+  const msg = JSON.stringify(action);
+  clients.forEach(({ ws }) => {
+    ws.send(msg);
+  });
 }
 
 const wsRouter = express.Router();
