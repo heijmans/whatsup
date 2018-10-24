@@ -18,7 +18,8 @@ export function App({ token }: IAppConnState): ReactElement<HTMLDivElement> {
     return (
       <div>
         <div>
-          <Link to="/user/login">Login</Link> | <Link to="/user/register">Register</Link>
+          <Link to="/user/login">Login</Link>
+          <Link to="/user/register">Register</Link>
         </div>
         <Switch>
           <Route exact path="/user/login" render={() => <h1>Login</h1>} />
