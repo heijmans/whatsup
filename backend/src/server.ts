@@ -25,6 +25,7 @@ const apiRouter = express.Router();
 apiRouter.use("/chats", chatController);
 apiRouter.use("/user", userController);
 app.use("/api", apiRouter);
+
 app.use("/ws", wsController);
 
 const port = 4001;
