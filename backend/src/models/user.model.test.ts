@@ -7,6 +7,7 @@ describe("user", () => {
 
   it("should create a user with an encrypted password", async () => {
     const user = await User.create({ username: "jan", password: "*" });
+    expect(user.id).toBeGreaterThan(0);
     expect(user.username).toBe("jan");
     expect(user.password).toMatch(/^\$2b\$/);
   });
