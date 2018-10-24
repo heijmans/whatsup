@@ -2,7 +2,7 @@ import React, { ChangeEvent, Component, FormEvent, ReactNode } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { AppThunkDispatch } from "../state/actions";
-import { createChat, deleteChat, fetchChats } from "../state/chat.actions";
+import { createChat, deleteChat } from "../state/chat.actions";
 import { getChats } from "../state/selectors";
 import { IChat, IState } from "../state/state";
 import { logoutUser } from "../state/user.actions";
@@ -15,7 +15,6 @@ interface IChatsConnActions {
   logoutUser: () => void;
   createChat: (name: string) => void;
   deleteChat: (chatId: number) => void;
-  fetchChats: () => void;
 }
 
 interface IChatsState {
@@ -29,7 +28,7 @@ export class Chats extends Component<IChatsConnState & IChatsConnActions, IChats
   }
 
   public render(): ReactNode {
-    const { chats, logoutUser: logout, fetchChats: fetch } = this.props;
+    const { chats, logoutUser: logout } = this.props;
     if (!chats) {
       return <h3>Loading...</h3>;
     }
@@ -39,9 +38,6 @@ export class Chats extends Component<IChatsConnState & IChatsConnActions, IChats
       <div>
         <a onClick={logout}>Logout</a>
         <h1>Chats</h1>
-        <p>
-          <a onClick={fetch}>Refresh</a>
-        </p>
         <ul>
           {chats.map((chat) => (
             <li key={chat.id}>
@@ -76,10 +72,8 @@ export class Chats extends Component<IChatsConnState & IChatsConnActions, IChats
   private readonly handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     const { newName } = this.state;
-    if (confirm(`Are you sure you want to create a new chat named ${newName}?`)) {
-      this.props.createChat(newName);
-      this.setState({ newName: "" });
-    }
+    this.props.createChat(newName);
+    this.setState({ newName: "" });
   };
 }
 
@@ -93,9 +87,6 @@ const mapDispatchToProps = (dispatch: AppThunkDispatch): IChatsConnActions => ({
   },
   deleteChat: (chatId: number) => {
     dispatch(deleteChat(chatId));
-  },
-  fetchChats: () => {
-    dispatch(fetchChats());
   },
   logoutUser: () => {
     dispatch(logoutUser());
