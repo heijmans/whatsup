@@ -20,9 +20,14 @@ export interface IChat {
   messages?: IMessage[];
 }
 
+export interface IChatState {
+  isFetching?: boolean;
+  ids: ILoadEntry<number[]>;
+  byId: { [id: number]: ILoadEntry<IChat> | undefined };
+}
+
 export interface IState {
-  token?: string;
-  user?: ILoadEntry<IUser>;
-  chatIds: number[];
-  chatById: { [id: number]: ILoadEntry<IChat> | undefined };
+  token: string | null;
+  user: ILoadEntry<IUser>;
+  chats: IChatState;
 }
