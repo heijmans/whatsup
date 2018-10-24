@@ -65,10 +65,17 @@ const chatService = {
     await response.json();
   },
 
-  connect(token: string): WebSocket {
-    const ws = new WebSocket("ws://localhost:4001/ws");
-    sendAction(ws, { type: "TOKEN", token });
-    return ws;
+  connect(token: string): Promise<WebSocket> {
+    const ws = new WebSocket("ws://localhost:4001/api/ws");
+    return new Promise((resolve, reject) => {
+      ws.addEventListener("open", () => {
+        sendAction(ws, { type: "TOKEN", token });
+        resolve(ws);
+      });
+      ws.addEventListener("error", (error) => {
+        reject(error);
+      });
+    });
   },
 
   sendMessage(ws: WebSocket, message: IMessageAction) {

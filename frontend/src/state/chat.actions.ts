@@ -137,17 +137,20 @@ export function messageAction(chatId: number, content: string): IMessageAction {
 let ws: WebSocket | undefined;
 
 export function connect(): SimpleThunkAction<IState> {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     if (ws) {
+      console.log("disconnect before connect");
       dispatch(disconnected());
       ws.close();
       ws = undefined;
     }
     const token = getTokenOrThrow(getState());
-    ws = chatService.connect(token);
+    console.log("connect");
+    ws = await chatService.connect(token);
     dispatch(connected());
 
     ws.addEventListener("message", (event) => {
+      console.log("message received: " + event.data);
       const action: AppAction = JSON.parse(event.data);
       if (action.type === MESSAGE) {
         dispatch(action);
@@ -155,6 +158,7 @@ export function connect(): SimpleThunkAction<IState> {
     });
 
     ws.addEventListener("close", () => {
+      console.log("closed");
       dispatch(disconnected);
       ws = undefined;
     });
@@ -164,6 +168,7 @@ export function connect(): SimpleThunkAction<IState> {
 export function sendMessage(chatId: number, content: string): SimpleThunkAction<IState> {
   return (dispatch) => {
     if (ws) {
+      console.log("send message: " + content);
       const message = messageAction(chatId, content);
       chatService.sendMessage(ws, message);
       dispatch(message);
@@ -175,6 +180,7 @@ export function sendMessage(chatId: number, content: string): SimpleThunkAction<
 
 export function disconnect(): SimpleThunkAction<IState> {
   return (dispatch) => {
+    console.log("disconnect, connected: " + !!ws);
     if (ws) {
       dispatch(disconnected());
       ws.close();

@@ -11,7 +11,7 @@
       let id = 0;
 
       function runWebSocketTest() {
-        const ws = new WebSocket("ws://localhost:4000/ws");
+        const ws = new WebSocket("ws://localhost:4001/api/ws");
     
         ws.addEventListener("open", function() {
           ws.send('{"type": "message", "chatId": 1, "content": "hallo!"}');
@@ -24,6 +24,10 @@
 
         ws.addEventListener("close", function() { 
           log("connection is closed"); 
+        });
+
+        ws.addEventListener("error", function (error) {
+          log("error: " + error);
         });
       }
     </script>

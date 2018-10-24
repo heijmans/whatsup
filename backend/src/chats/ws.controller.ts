@@ -56,9 +56,11 @@ const wsRouter = express.Router();
 
 wsRouter.ws("/", (ws, _) => {
   let client: IClient | undefined;
+  console.log("websocket opened");
 
   ws.on("message", async (msg) => {
     const msgStr = msg.toString();
+    console.log("received message: " + msgStr + "(auth: " + !!client + ")");
     const action: Action = JSON.parse(msgStr);
     if (client) {
       handleAction(client, action);
@@ -66,6 +68,7 @@ wsRouter.ws("/", (ws, _) => {
       const userInfo = jwt.verify(action.token, secrets.jwt) as IUserInfo;
       const user = await User.findById(userInfo.userId);
       if (user) {
+        console.log("token success for: " + user.username);
         client = addClient(user, ws);
       } else {
         console.log("unauthorized msg: " + msgStr);
@@ -78,6 +81,7 @@ wsRouter.ws("/", (ws, _) => {
   });
 
   ws.on("close", () => {
+    console.log("closed (auth: " + !!client + ")");
     if (client) {
       removeClient(client);
     }
