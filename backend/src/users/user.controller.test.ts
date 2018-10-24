@@ -5,7 +5,7 @@ import User from "./user.model";
 jest.mock("express", () => ({
   Router: () => new MockRouter(),
 }));
-jest.mock("./user.model", () => new MockModel('login'));
+jest.mock("./user.model", () => new MockModel("login"));
 
 const MOCK_CREDS = {
   username: "user1",
