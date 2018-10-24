@@ -66,7 +66,7 @@ const chatService = {
   },
 
   connect(token: string): WebSocket {
-    const ws = new WebSocket("ws://localhost:4000/ws");
+    const ws = new WebSocket("ws://localhost:4001/ws");
     sendAction(ws, { type: "TOKEN", token });
     return ws;
   },
