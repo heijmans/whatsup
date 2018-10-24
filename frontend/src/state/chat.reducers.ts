@@ -1,6 +1,7 @@
 import { AppAction } from "./actions";
 import {
   MESSAGE,
+  READ_CHAT,
   RECEIVE_CHATS,
   RECEIVE_CREATE_CHAT,
   RECEIVE_DELETE_CHAT,
@@ -11,6 +12,14 @@ import {
 import { IMessageAction } from "./chat.service";
 import { IChat, ILoadEntry, IMessage, IMessagesState } from "./state";
 import { REQUEST_LOGOUT_USER } from "./user.actions";
+
+function resetUnread(chat: IChat, chatId: number): IChat {
+  return chat.id === chatId ? { ...chat, unread: 0 } : chat;
+}
+
+function incrementUnread(chat: IChat, chatId: number): IChat {
+  return chat.id === chatId ? { ...chat, unread: (chat.unread || 0) + 1 } : chat;
+}
 
 export function chatReducer(
   state: ILoadEntry<IChat[]> = {},
@@ -30,6 +39,24 @@ export function chatReducer(
     return state; // we'll reload the chat list
   } else if (action.type === REQUEST_LOGOUT_USER) {
     return {};
+  } else if (action.type === MESSAGE) {
+    const { data } = state;
+    if (data) {
+      return {
+        data: data.map((chat) => incrementUnread(chat, action.chatId)),
+      };
+    } else {
+      return state;
+    }
+  } else if (action.type === READ_CHAT) {
+    const { data } = state;
+    if (data) {
+      return {
+        data: data.map((chat) => resetUnread(chat, action.chatId)),
+      };
+    } else {
+      return state;
+    }
   } else {
     return state;
   }

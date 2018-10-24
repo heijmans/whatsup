@@ -26,3 +26,11 @@ export function getChat(state: IState, chatId: number): IChat | undefined {
 export function getMessages(state: IState, chatId: number): IMessage[] {
   return state.messagesByChatId[chatId] || [];
 }
+
+export function getUnread(state: IState): number {
+  const chats = getChats(state);
+  if (!chats) {
+    return 0;
+  }
+  return chats.reduce((sum, chat) => sum + (chat.unread || 0), 0);
+}

@@ -189,6 +189,19 @@ export function disconnect(): SimpleThunkAction<IState> {
   };
 }
 
+// read chat
+
+export interface IReadChat {
+  type: "READ_CHAT";
+  chatId: number;
+}
+
+export const READ_CHAT = "READ_CHAT";
+
+export function readChat(chatId: number): IReadChat {
+  return { type: READ_CHAT, chatId };
+}
+
 export type ChatActions =
   | IRequestChats
   | IReceiveChats
@@ -198,4 +211,5 @@ export type ChatActions =
   | IReceiveDeleteChat
   | IConnected
   | IDisconnected
-  | IMessageAction;
+  | IMessageAction
+  | IReadChat;

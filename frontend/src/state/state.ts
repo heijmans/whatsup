@@ -18,6 +18,7 @@ export interface IMessage {
 export interface IChat {
   id: number;
   name: string;
+  unread?: number;
 }
 
 export interface IMessagesState {
