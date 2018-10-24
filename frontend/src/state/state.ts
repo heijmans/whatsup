@@ -17,11 +17,12 @@ export interface IMessage {
 export interface IChat {
   id: number;
   name: string;
+  messages?: IMessage[];
 }
 
 export interface IState {
   token?: string;
-  user?: IUser;
+  user?: ILoadEntry<IUser>;
   chatIds: number[];
-  chatById: { [id: number]: IChat | undefined };
+  chatById: { [id: number]: ILoadEntry<IChat> | undefined };
 }
