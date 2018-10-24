@@ -11,8 +11,9 @@ const router = express.Router();
 router.get("/", async (_, res) => {
   try {
     const chats = await Chat.findAll();
-    res.send(chats.map(cleanChat));
+    res.json(chats.map(cleanChat));
   } catch (e) {
+    console.warn(e);
     res.status(500).send(e.toString());
   }
 });
@@ -27,6 +28,7 @@ router.post("/", async (req, res) => {
     const chat = await Chat.create({ name })
     res.json(cleanChat(chat));
   } catch (e) {
+    console.warn(e);
     res.status(500).send(e.toString());
   }
 });
@@ -36,11 +38,12 @@ router.get("/:id", async (req, res) => {
   try {
     const chat = await Chat.findById(id);
     if (chat) {
-      res.send(cleanChat(chat));
+      res.json(cleanChat(chat));
     } else {
       res.status(404).send("chat not found");
     }
   } catch (e) {
+    console.warn(e);
     res.status(500).send(e.toString());
   }
 });
@@ -51,11 +54,12 @@ router.delete("/:id", async (req, res) => {
     const chat = await Chat.findById(id);
     if (chat) {
       await chat.destroy();
-      res.send({ success: true });
+      res.json({ success: true });
     } else {
       res.status(404).send("chat not found");
     }
   } catch (e) {
+    console.warn(e);
     res.status(500).send(e.toString());
   }
 });

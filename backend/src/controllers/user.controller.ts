@@ -15,11 +15,12 @@ router.get("/", async (req, res) => {
     const { userId } = req.user!;
     const user = await User.findById(userId);
     if (user) {
-      res.send(cleanUser(user));
+      res.json(cleanUser(user));
     } else {
       res.status(403).send("invalid credentials");
     }
   } catch (e) {
+    console.warn(e);
     res.status(500).send(e.toString());
   }
 });
@@ -35,6 +36,7 @@ router.post("/register", async (req, res) => {
     const user = await User.create({ username, password })
     res.json(cleanUser(user));
   } catch (e) {
+    console.warn(e);
     res.status(500).send(e.toString());
   }
 });
@@ -52,11 +54,12 @@ router.post("/login", async (req, res) => {
       const token = jwt.sign({ userId: user.id }, secrets.jwt, {
         expiresIn: "1h",
       });
-      res.send({ success: true, token });
+      res.json({ success: true, token });
     } else {
       res.status(403).send("invalid credentials");
     }
   } catch (e) {
+    console.warn(e);
     res.status(500).send(e.toString());
   }
 });
