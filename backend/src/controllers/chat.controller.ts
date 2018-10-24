@@ -25,7 +25,7 @@ interface IChatCreate {
 router.post("/", async (req, res) => {
   const { name }: IChatCreate = req.body;
   try {
-    const chat = await Chat.create({ name })
+    const chat = await Chat.create({ name });
     res.json(cleanChat(chat));
   } catch (e) {
     console.warn(e);

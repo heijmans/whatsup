@@ -5,7 +5,7 @@ import chatController from "./chat.controller";
 jest.mock("express", () => ({
   Router: () => new MockRouter(),
 }));
-jest.mock("../models/chat.model", (() => new MockModel()));
+jest.mock("../models/chat.model", () => new MockModel());
 
 const MOCK_CHAT1 = {
   id: 1,
@@ -20,7 +20,7 @@ const MOCK_CHATS = [MOCK_CHAT1, MOCK_CHAT2];
 describe("chat controller", () => {
   it("should get all chats", async () => {
     toSpy(Chat.findAll).mockResolvedValue(MOCK_CHATS);
-    const response = chatController.doGet("/", { });
+    const response = chatController.doGet("/", { params: {} });
     expect(toSpy(Chat.findAll)).toHaveBeenCalledWith();
 
     await Promise.resolve();
@@ -29,7 +29,7 @@ describe("chat controller", () => {
 
   it("should create a chat", async () => {
     toSpy(Chat.create).mockResolvedValue(MOCK_CHAT2);
-    const response = chatController.doPost("/", { body: { name: "ok" } });
+    const response = chatController.doPost("/", { params: {}, body: { name: "ok" } });
     expect(toSpy(Chat.create)).toHaveBeenCalledWith({ name: "ok" });
 
     await Promise.resolve();
@@ -47,7 +47,7 @@ describe("chat controller", () => {
 
   it("should delete a chat", async () => {
     const mockChat = { destroy: jest.fn().mockResolvedValue(undefined) };
-    
+
     toSpy(Chat.findById).mockResolvedValue(mockChat);
     const response = chatController.doDelete("/:id", { params: { id: "5" } });
     expect(toSpy(Chat.findById)).toHaveBeenCalledWith(5);

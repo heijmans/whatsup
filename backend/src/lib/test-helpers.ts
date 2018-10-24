@@ -15,7 +15,7 @@ export class MockResponse {
 }
 
 export interface IRequest {
-  params?: { [key: string]: string };
+  params: { [key: string]: string };
   body?: any;
 }
 
@@ -64,6 +64,6 @@ export class MockRouter {
   }
 }
 
-declare module 'express' {
+declare module "express" {
   function Router(options?: RouterOptions): MockRouter;
 }

@@ -20,7 +20,7 @@ describe("user", () => {
 
   it("should login a user", async () => {
     await User.create({ username: "piet", password: "fvja54" });
-    
+
     const user = await User.login("piet", "fvja54");
     expect(user).toBeTruthy();
     expect(user!.username).toBe("piet");

@@ -33,7 +33,7 @@ interface IUserRegister {
 router.post("/register", async (req, res) => {
   try {
     const { username, password }: IUserRegister = req.body;
-    const user = await User.create({ username, password })
+    const user = await User.create({ username, password });
     res.json(cleanUser(user));
   } catch (e) {
     console.warn(e);
