@@ -1,4 +1,4 @@
-{
+module.exports = {
   "development": {
     "database": "whatsup_dev",
     "dialect": "postgres",
@@ -17,4 +17,4 @@
     "logging": false,
     "operatorsAliases": false
   }
-}
+};
