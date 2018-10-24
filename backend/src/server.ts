@@ -15,6 +15,7 @@ expressWs(app);
 import wsController from "./chats/ws.controller";
 
 app.use(
+  "/api",
   expressJwt({ secret: secrets.jwt }).unless({
     path: ["/api/user/register", "/api/user/login"],
   }),
@@ -23,8 +24,8 @@ app.use(
 const apiRouter = express.Router();
 apiRouter.use("/chats", chatController);
 apiRouter.use("/user", userController);
-apiRouter.use("/ws", wsController);
 app.use("/api", apiRouter);
+app.use("/ws", wsController);
 
 const port = 4001;
 console.log(`http://localhost:${port}`);

@@ -66,7 +66,7 @@ const chatService = {
   },
 
   connect(token: string): Promise<WebSocket> {
-    const ws = new WebSocket("ws://localhost:4001/api/ws");
+    const ws = new WebSocket("ws://localhost:4001/ws");
     return new Promise((resolve, reject) => {
       ws.addEventListener("open", () => {
         sendAction(ws, { type: "TOKEN", token });
