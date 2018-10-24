@@ -3,13 +3,14 @@ import "express-ws";
 import jwt from "jsonwebtoken";
 import ws from "ws";
 import secrets from "../../config/secrets";
+import User from "../users/user.model";
 
 interface IUserInfo {
   userId: number;
 }
 
 interface IClient {
-  userInfo: IUserInfo;
+  user: User;
   ws: ws;
 }
 
@@ -20,7 +21,7 @@ interface ITokenAction {
 
 interface IMessageAction {
   type: "MESSAGE";
-  userId?: number;
+  from: string;
   chatId: number;
   content: string;
 }
@@ -29,8 +30,8 @@ type Action = ITokenAction | IMessageAction;
 
 const clients: IClient[] = [];
 
-function addClient(userInfo: IUserInfo, ws: ws): IClient {
-  const client = { userInfo, ws };
+function addClient(user: User, ws: ws): IClient {
+  const client = { user, ws };
   clients.push(client);
   return client;
 }
@@ -42,7 +43,7 @@ function removeClient(client: IClient) {
 
 function handleAction(client: IClient, action: Action) {
   if (action.type === "MESSAGE") {
-    action = { ...action, userId: client.userInfo.userId };
+    action = { ...action, from: client.user.username };
     const msg = JSON.stringify(action);
     clients.forEach((client) => {
       client.ws.send(msg);
@@ -55,14 +56,20 @@ const wsRouter = express.Router();
 wsRouter.ws("/", (ws, _) => {
   let client: IClient | undefined;
 
-  ws.on("message", (msg) => {
+  ws.on("message", async (msg) => {
     const msgStr = msg.toString();
     const action: Action = JSON.parse(msgStr);
     if (client) {
       handleAction(client, action);
     } else if (action.type === "TOKEN") {
       const userInfo = jwt.verify(action.token, secrets.jwt) as IUserInfo;
-      client = addClient(userInfo, ws);
+      const user = await User.findById(userInfo.userId);
+      if (user) {
+        client = addClient(user, ws);
+      } else {
+        console.log("unauthorized msg: " + msgStr);
+        ws.close();
+      }
     } else {
       console.log("unauthorized msg: " + msgStr);
       ws.close();
