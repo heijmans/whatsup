@@ -12,6 +12,12 @@ function jsonBody() {
   };
 }
 
+function checkResponse(response: Response) {
+  if (response.status >= 300) {
+    throw new Error(`error: ${response.status}`);
+  }
+}
+
 function sendAction(ws: WebSocket, action: any): void {
   ws.send(JSON.stringify(action));
 }
@@ -27,6 +33,7 @@ export interface IMessageAction {
 const chatService = {
   async all(token: string): Promise<IChat[]> {
     const response = await fetch("/api/chats", { headers: jwtHeaders(token) });
+    checkResponse(response);
     const chats = await response.json();
     return chats;
   },
@@ -37,12 +44,14 @@ const chatService = {
       headers: { ...jsonBody(), ...jwtHeaders(token) },
       method: "POST",
     });
+    checkResponse(response);
     const chat = await response.json();
     return chat;
   },
 
   async get(token: string, id: number): Promise<string> {
     const response = await fetch(`/api/chats/${id}`, { headers: jwtHeaders(token) });
+    checkResponse(response);
     const chat = await response.json();
     return chat;
   },
@@ -52,6 +61,7 @@ const chatService = {
       headers: jwtHeaders(token),
       method: "DELETE",
     });
+    checkResponse(response);
     await response.json();
   },
 

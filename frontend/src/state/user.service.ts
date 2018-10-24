@@ -12,9 +12,16 @@ function jsonBody() {
   };
 }
 
+function checkResponse(response: Response) {
+  if (response.status >= 300) {
+    throw new Error(`error: ${response.status}`);
+  }
+}
+
 const userService = {
   async get(token: string): Promise<IUser> {
     const response = await fetch("/api/user", { headers: jwtHeaders(token) });
+    checkResponse(response);
     const user = await response.json();
     return user;
   },
@@ -25,6 +32,7 @@ const userService = {
       headers: jsonBody(),
       method: "POST",
     });
+    checkResponse(response);
     const user = await response.json();
     return user;
   },
@@ -35,6 +43,7 @@ const userService = {
       headers: jsonBody(),
       method: "POST",
     });
+    checkResponse(response);
     const data = await response.json();
     return data.token;
   },
