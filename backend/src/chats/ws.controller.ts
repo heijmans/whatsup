@@ -60,7 +60,7 @@ wsRouter.ws("/", (ws, _) => {
 
   ws.on("message", async (msg) => {
     const msgStr = msg.toString();
-    console.log("received message: " + msgStr + "(auth: " + !!client + ")");
+    console.log("received message: " + msgStr + " (auth: " + !!client + ")");
     const action: Action = JSON.parse(msgStr);
     if (client) {
       handleAction(client, action);
