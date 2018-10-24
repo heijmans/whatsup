@@ -6,6 +6,12 @@ export class MockModel {
   create = jest.fn();
   findAll = jest.fn();
   findById = jest.fn();
+
+  constructor(...extraFields: string[]) {
+    extraFields.forEach((field) => {
+      (this as any)[field] = jest.fn();
+    });
+  }
 }
 
 export class MockResponse {
