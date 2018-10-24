@@ -26,5 +26,6 @@ apiRouter.use("/user", userController);
 apiRouter.use("/ws", wsController);
 app.use("/api", apiRouter);
 
-console.log("http://localhost:4000");
-app.listen(4000);
+const port = 4001;
+console.log(`http://localhost:${port}`);
+app.listen(port);
