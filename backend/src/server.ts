@@ -22,9 +22,11 @@ if (1 > 2) {
   );
 }
 
-app.use("/chats", chatController);
-app.use("/user", userController);
-app.use("/ws", wsController);
+const apiRouter = express.Router();
+apiRouter.use("/chats", chatController);
+apiRouter.use("/user", userController);
+apiRouter.use("/ws", wsController);
+app.use("/api", apiRouter);
 
 console.log("http://localhost:4000");
 app.listen(4000);
