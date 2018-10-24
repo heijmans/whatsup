@@ -34,10 +34,10 @@
   },
   "scripts": {
     "migrate": "sequelize db:migrate",
-    "mon": "nodemon -w src -e ts,js -x 'yarn server'",
     "pq": "yarn pretty-quick",
     "prettier": "prettier --write 'src/**/*.ts' 'src/**/*.js*' '*.js*' 'config/*.js*'",
     "server": "ts-node src/server.ts",
+    "start": "nodemon -w src -e ts,js -x 'yarn server'",
     "test": "jest --forceExit --detectOpenHandles --watch"
   },
   "jest": {
