@@ -12,6 +12,18 @@ function jsonBody() {
   };
 }
 
+function sendAction(ws: WebSocket, action: any): void {
+  ws.send(JSON.stringify(action));
+}
+
+export interface IMessageAction {
+  type: "MESSAGE";
+  uuid: string;
+  from?: string;
+  chatId: number;
+  content: string;
+}
+
 const chatService = {
   async all(token: string): Promise<IChat[]> {
     const response = await fetch("/api/chats", { headers: jwtHeaders(token) });
@@ -41,6 +53,16 @@ const chatService = {
       method: "DELETE",
     });
     await response.json();
+  },
+
+  connect(token: string): WebSocket {
+    const ws = new WebSocket("ws://localhost:4000/ws");
+    sendAction(ws, { type: "TOKEN", token });
+    return ws;
+  },
+
+  sendMessage(ws: WebSocket, message: IMessageAction) {
+    sendAction(ws, message);
   },
 };
 
