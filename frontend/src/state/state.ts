@@ -18,17 +18,15 @@ export interface IMessage {
 export interface IChat {
   id: number;
   name: string;
-  messages?: IMessage[];
 }
 
-export interface IChatState {
-  isFetching?: boolean;
-  ids: ILoadEntry<number[]>;
-  byId: { [id: number]: ILoadEntry<IChat> | undefined };
+export interface IMessagesState {
+  [chatId: number]: IMessage[] | undefined;
 }
 
 export interface IState {
   token: string | null;
   user: ILoadEntry<IUser>;
-  chats: IChatState;
+  chats: ILoadEntry<IChat[]>;
+  messagesByChatId: IMessagesState;
 }
