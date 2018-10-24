@@ -10,19 +10,18 @@ function cleanUser({ id, username }: User) {
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  const { userId } = req.user!;
-  User.findById(userId)
-    .then((user) => {
-      if (user) {
-        res.send(cleanUser(user));
-      } else {
-        res.status(403).send("invalid credentials");
-      }
-    })
-    .catch((e) => {
-      res.status(500).send(e.toString());
-    });
+router.get("/", async (req, res) => {
+  try {
+    const { userId } = req.user!;
+    const user = await User.findById(userId);
+    if (user) {
+      res.send(cleanUser(user));
+    } else {
+      res.status(403).send("invalid credentials");
+    }
+  } catch (e) {
+    res.status(500).send(e.toString());
+  }
 });
 
 interface IUserRegister {
@@ -30,15 +29,14 @@ interface IUserRegister {
   password: string;
 }
 
-router.post("/register", (req, res) => {
-  const { username, password }: IUserRegister = req.body;
-  User.create({ username, password })
-    .then((user) => {
-      res.json(cleanUser(user));
-    })
-    .catch((e) => {
-      res.status(500).send(e.toString());
-    });
+router.post("/register", async (req, res) => {
+  try {
+    const { username, password }: IUserRegister = req.body;
+    const user = await User.create({ username, password })
+    res.json(cleanUser(user));
+  } catch (e) {
+    res.status(500).send(e.toString());
+  }
 });
 
 interface IUserLogin {
@@ -46,22 +44,21 @@ interface IUserLogin {
   password: string;
 }
 
-router.post("/login", (req, res) => {
-  const { username, password }: IUserLogin = req.body;
-  User.findOne({ where: { username } })
-    .then((user) => {
-      if (user && user.validatePassword(password)) {
-        const token = jwt.sign({ userId: user.id }, secrets.jwt, {
-          expiresIn: "1h",
-        });
-        res.send({ success: true, token });
-      } else {
-        res.status(403).send("invalid credentials");
-      }
-    })
-    .catch((e) => {
-      res.status(500).send(e.toString());
-    });
+router.post("/login", async (req, res) => {
+  try {
+    const { username, password }: IUserLogin = req.body;
+    const user = await User.findOne({ where: { username } });
+    if (user && user.validatePassword(password)) {
+      const token = jwt.sign({ userId: user.id }, secrets.jwt, {
+        expiresIn: "1h",
+      });
+      res.send({ success: true, token });
+    } else {
+      res.status(403).send("invalid credentials");
+    }
+  } catch (e) {
+    res.status(500).send(e.toString());
+  }
 });
 
 export default router;

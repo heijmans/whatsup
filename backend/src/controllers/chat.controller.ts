@@ -8,62 +8,56 @@ function cleanChat({ id, name }: Chat) {
 
 const router = express.Router();
 
-router.get("/", (_, res) => {
-  Chat.findAll()
-    .then((chats) => {
-      res.send(chats.map(cleanChat));
-    })
-    .catch((e) => {
-      res.status(500).send(e.toString());
-    });
+router.get("/", async (_, res) => {
+  try {
+    const chats = await Chat.findAll();
+    res.send(chats.map(cleanChat));
+  } catch (e) {
+    res.status(500).send(e.toString());
+  }
 });
 
 interface IChatCreate {
   name: string;
 }
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const { name }: IChatCreate = req.body;
-  Chat.create({ name })
-    .then((chat) => {
-      res.json(cleanChat(chat));
-    })
-    .catch((e) => {
-      res.status(500).send(e.toString());
-    });
+  try {
+    const chat = await Chat.create({ name })
+    res.json(cleanChat(chat));
+  } catch (e) {
+    res.status(500).send(e.toString());
+  }
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  Chat.findById(id)
-    .then((chat) => {
-      if (chat) {
-        res.send(chat);
-      } else {
-        res.status(404).send("chat not found");
-      }
-    })
-    .catch((e) => {
-      res.status(500).send(e.toString());
-    });
+  try {
+    const chat = await Chat.findById(id);
+    if (chat) {
+      res.send(cleanChat(chat));
+    } else {
+      res.status(404).send("chat not found");
+    }
+  } catch (e) {
+    res.status(500).send(e.toString());
+  }
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  Chat.findById(id)
-    .then((chat) => {
-      if (chat) {
-        return chat.destroy().then(() => {
-          res.send({ success: true });
-        });
-      } else {
-        res.status(404).send("chat not found");
-        return;
-      }
-    })
-    .catch((e) => {
-      res.status(500).send(e.toString());
-    });
+  try {
+    const chat = await Chat.findById(id);
+    if (chat) {
+      await chat.destroy();
+      res.send({ success: true });
+    } else {
+      res.status(404).send("chat not found");
+    }
+  } catch (e) {
+    res.status(500).send(e.toString());
+  }
 });
 
 export default router;
