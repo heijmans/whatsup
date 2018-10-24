@@ -1,3 +1,5 @@
+import ws from "ws";
+
 export function toSpy(x: any): jest.SpyInstance {
   return x as jest.SpyInstance;
 }
@@ -45,6 +47,10 @@ export class MockRouter {
 
   delete(path: string, fn: RequestHandler) {
     this.request("DELETE", path, fn);
+  }
+
+  ws(_: string, __: (ws: ws, req: IRequest) => void) {
+    throw new Error("unimplemented");
   }
 
   doRequest(method: string, path: string, req: IRequest): MockResponse {
