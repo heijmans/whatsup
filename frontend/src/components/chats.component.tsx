@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { AppThunkDispatch } from "../state/actions";
+import { deleteChat } from "../state/chat.actions";
 import { getChats } from "../state/selectors";
 import { IChat, IState } from "../state/state";
 import { logoutUser } from "../state/user.actions";
@@ -12,11 +13,13 @@ interface IChatsConnState {
 
 interface IChatsConnActions {
   logoutUser: () => void;
+  deleteChat: (chatId: number) => void;
 }
 
 export function Chats({
   chats,
   logoutUser: logout,
+  deleteChat: del,
 }: IChatsConnState & IChatsConnActions): ReactElement<HTMLElement> {
   if (!chats) {
     return <h3>Loading...</h3>;
@@ -32,7 +35,8 @@ export function Chats({
             <Link to={`/chats/${chat.id}`}>
               {chat.name}
               {chat.unread ? ` (${chat.unread})` : ""}
-            </Link>
+            </Link>{" "}
+            <a onClick={() => del(chat.id)}>X</a>
           </li>
         ))}
       </ul>
@@ -45,6 +49,9 @@ const mapStateToProps = (state: IState): IChatsConnState => ({
 });
 
 const mapDispatchToProps = (dispatch: AppThunkDispatch): IChatsConnActions => ({
+  deleteChat: (chatId: number) => {
+    dispatch(deleteChat(chatId));
+  },
   logoutUser: () => {
     dispatch(logoutUser());
   },
