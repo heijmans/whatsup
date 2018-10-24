@@ -1,7 +1,7 @@
 import express from "express";
 import "express-ws";
 import jwt from "jsonwebtoken";
-import ws from "ws";
+import WS from "ws";
 import secrets from "../../config/secrets";
 import User from "../users/user.model";
 
@@ -11,7 +11,7 @@ interface IUserInfo {
 
 interface IClient {
   user: User;
-  ws: ws;
+  ws: WS;
 }
 
 interface ITokenAction {
@@ -30,7 +30,7 @@ type Action = ITokenAction | IMessageAction;
 
 const clients: IClient[] = [];
 
-function addClient(user: User, ws: ws): IClient {
+function addClient(user: User, ws: WS): IClient {
   const client = { user, ws };
   clients.push(client);
   return client;
@@ -45,8 +45,8 @@ function handleAction(client: IClient, action: Action) {
   if (action.type === "MESSAGE") {
     action = { ...action, from: client.user.username };
     const msg = JSON.stringify(action);
-    clients.forEach((client) => {
-      client.ws.send(msg);
+    clients.forEach(({ ws }) => {
+      ws.send(msg);
     });
   }
 }

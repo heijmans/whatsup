@@ -8,8 +8,8 @@ jest.mock("express", () => ({
 jest.mock("./user.model", () => new MockModel("login"));
 
 const MOCK_CREDS = {
-  username: "user1",
   password: "rwt4",
+  username: "user1",
 };
 
 const MOCK_USER = {

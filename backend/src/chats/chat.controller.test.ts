@@ -1,4 +1,4 @@
-import { MockModel, MockRouter, toSpy, toMockRouter } from "../lib/test-helpers";
+import { MockModel, MockRouter, toMockRouter, toSpy } from "../lib/test-helpers";
 import chatController from "./chat.controller";
 import Chat from "./chat.model";
 

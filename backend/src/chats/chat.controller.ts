@@ -33,7 +33,7 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id, 10);
   try {
     const chat = await Chat.findById(id);
     if (chat) {
@@ -48,7 +48,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(req.params.id, 10);
   try {
     const chat = await Chat.findById(id);
     if (chat) {

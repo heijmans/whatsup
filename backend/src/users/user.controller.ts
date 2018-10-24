@@ -1,6 +1,6 @@
-import jwt from "jsonwebtoken";
-import "express-jwt"; // ts-node must pickup the type of req.user
 import express from "express";
+import "express-jwt"; // ts-node must pickup the type of req.user
+import jwt from "jsonwebtoken";
 import secrets from "../../config/secrets";
 import User from "./user.model";
 

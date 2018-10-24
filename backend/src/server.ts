@@ -1,10 +1,10 @@
+import bodyParser from "body-parser";
 import express from "express";
 import expressJwt from "express-jwt";
 import expressWs from "express-ws";
-import bodyParser from "body-parser";
 import secrets from "../config/secrets";
-import "./db";
 import chatController from "./chats/chat.controller";
+import "./db";
 import userController from "./users/user.controller";
 
 const app = express();
