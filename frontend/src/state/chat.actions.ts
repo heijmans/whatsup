@@ -137,7 +137,7 @@ export function messageAction(chatId: number, content: string): IMessageAction {
 let ws: WebSocket | undefined;
 
 export function connect(): SimpleThunkAction<IState> {
-  return async (dispatch, getState) => {
+  return (dispatch, getState) => {
     if (ws) {
       dispatch(disconnected());
       ws.close();
@@ -174,7 +174,7 @@ export function sendMessage(chatId: number, content: string): SimpleThunkAction<
 }
 
 export function disconnect(): SimpleThunkAction<IState> {
-  return async (dispatch) => {
+  return (dispatch) => {
     if (ws) {
       dispatch(disconnected());
       ws.close();
