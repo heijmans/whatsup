@@ -1,11 +1,11 @@
-import { MockModel, MockRouter, toSpy } from "../lib/test-helpers";
-import Chat from "../models/chat.model";
+import { MockModel, MockRouter, toSpy, toMockRouter } from "../lib/test-helpers";
 import chatController from "./chat.controller";
+import Chat from "./chat.model";
 
 jest.mock("express", () => ({
   Router: () => new MockRouter(),
 }));
-jest.mock("../models/chat.model", () => new MockModel());
+jest.mock("./chat.model", () => new MockModel());
 
 const MOCK_CHAT1 = {
   id: 1,
@@ -17,10 +17,12 @@ const MOCK_CHAT2 = {
 };
 const MOCK_CHATS = [MOCK_CHAT1, MOCK_CHAT2];
 
+const mockController = toMockRouter(chatController);
+
 describe("chat controller", () => {
   it("should get all chats", async () => {
     toSpy(Chat.findAll).mockResolvedValue(MOCK_CHATS);
-    const response = chatController.doGet("/", { params: {} });
+    const response = mockController.doGet("/", { params: {} });
     expect(toSpy(Chat.findAll)).toHaveBeenCalledWith();
 
     await Promise.resolve();
@@ -29,7 +31,7 @@ describe("chat controller", () => {
 
   it("should create a chat", async () => {
     toSpy(Chat.create).mockResolvedValue(MOCK_CHAT2);
-    const response = chatController.doPost("/", { params: {}, body: { name: "ok" } });
+    const response = mockController.doPost("/", { params: {}, body: { name: "ok" } });
     expect(toSpy(Chat.create)).toHaveBeenCalledWith({ name: "ok" });
 
     await Promise.resolve();
@@ -38,7 +40,7 @@ describe("chat controller", () => {
 
   it("should get a chat", async () => {
     toSpy(Chat.findById).mockResolvedValue(MOCK_CHAT1);
-    const response = chatController.doGet("/:id", { params: { id: "5" } });
+    const response = mockController.doGet("/:id", { params: { id: "5" } });
     expect(toSpy(Chat.findById)).toHaveBeenCalledWith(5);
 
     await Promise.resolve();
@@ -49,7 +51,7 @@ describe("chat controller", () => {
     const mockChat = { destroy: jest.fn().mockResolvedValue(undefined) };
 
     toSpy(Chat.findById).mockResolvedValue(mockChat);
-    const response = chatController.doDelete("/:id", { params: { id: "5" } });
+    const response = mockController.doDelete("/:id", { params: { id: "5" } });
     expect(toSpy(Chat.findById)).toHaveBeenCalledWith(5);
 
     await Promise.resolve();

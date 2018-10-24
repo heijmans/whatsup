@@ -77,6 +77,6 @@ export class MockRouter {
   }
 }
 
-declare module "express" {
-  function Router(options?: RouterOptions): MockRouter;
+export function toMockRouter(x: any): MockRouter {
+  return x as MockRouter;
 }

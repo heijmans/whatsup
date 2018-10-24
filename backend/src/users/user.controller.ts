@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import "express-jwt"; // ts-node must pickup the type of req.user
 import express from "express";
 import secrets from "../../config/secrets";
-import User from "../models/user.model";
+import User from "./user.model";
 
 function cleanUser({ id, username }: User) {
   return { id, username };

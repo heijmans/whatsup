@@ -1,6 +1,5 @@
-import "express-jwt"; // ts-node must pickup the type of req.user
 import express from "express";
-import Chat from "../models/chat.model";
+import Chat from "./chat.model";
 
 function cleanChat({ id, name }: Chat) {
   return { id, name };

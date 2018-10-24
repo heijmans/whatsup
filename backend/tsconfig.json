@@ -18,6 +18,5 @@
     "target": "es2015",
     "types": ["jest", "node"]
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/lib/test-helpers.ts", "src/**/*.test.ts"]
+  "include": ["src/**/*.ts"]
 }

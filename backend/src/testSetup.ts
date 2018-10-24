@@ -1,1 +1,1 @@
-import "./models/db";
+import "./db";
