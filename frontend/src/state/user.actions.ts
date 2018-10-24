@@ -1,4 +1,5 @@
 import { SimpleThunkAction } from "../lib/types";
+import { connect, disconnect, fetchChats } from "./chat.actions";
 import { getTokenOrThrow } from "./selectors";
 import { IState, IUser } from "./state";
 import userService from "./user.service";
@@ -101,6 +102,7 @@ export function loginUser(username: string, password: string): SimpleThunkAction
     dispatch(receiveLoginUser(token));
     dispatch(fetchUser());
     dispatch(fetchChats());
+    dispatch(connect());
   };
 }
 

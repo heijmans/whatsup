@@ -1,5 +1,7 @@
+import { uuidv4 } from "../lib/helpers";
 import { SimpleThunkAction } from "../lib/types";
-import chatService from "./chat.service";
+import { AppAction } from "./actions";
+import chatService, { IMessageAction } from "./chat.service";
 import { getTokenOrThrow } from "./selectors";
 import { IChat, IState } from "./state";
 
@@ -103,10 +105,91 @@ export function deleteChat(id: number): SimpleThunkAction<IState> {
   };
 }
 
+// websocket
+
+export interface IConnected {
+  type: "CONNECTED";
+}
+
+export const CONNECTED = "CONNECTED";
+
+export function connected(): IConnected {
+  return { type: CONNECTED };
+}
+
+export interface IDisconnected {
+  type: "DISCONNECTED";
+}
+
+export const DISCONNECTED = "DISCONNECTED";
+
+export function disconnected(): IDisconnected {
+  return { type: DISCONNECTED };
+}
+
+export const MESSAGE = "MESSAGE";
+
+export function messageAction(chatId: number, content: string): IMessageAction {
+  const uuid = uuidv4();
+  return { type: MESSAGE, uuid, chatId, content };
+}
+
+let ws: WebSocket | undefined;
+
+export function connect(): SimpleThunkAction<IState> {
+  return async (dispatch, getState) => {
+    if (ws) {
+      dispatch(disconnected());
+      ws.close();
+      ws = undefined;
+    }
+    const token = getTokenOrThrow(getState());
+    ws = chatService.connect(token);
+    dispatch(connected());
+
+    ws.addEventListener("message", (event) => {
+      const action: AppAction = JSON.parse(event.data);
+      if (action.type === MESSAGE) {
+        dispatch(action);
+      }
+    });
+
+    ws.addEventListener("close", () => {
+      dispatch(disconnected);
+      ws = undefined;
+    });
+  };
+}
+
+export function sendMessage(chatId: number, content: string): SimpleThunkAction<IState> {
+  return (dispatch) => {
+    if (ws) {
+      const message = messageAction(chatId, content);
+      chatService.sendMessage(ws, message);
+      dispatch(message);
+    } else {
+      throw new Error("websocket closed, could not send message");
+    }
+  };
+}
+
+export function disconnect(): SimpleThunkAction<IState> {
+  return async (dispatch) => {
+    if (ws) {
+      dispatch(disconnected());
+      ws.close();
+      ws = undefined;
+    }
+  };
+}
+
 export type ChatActions =
   | IRequestChats
   | IReceiveChats
   | IRequestCreateChat
   | IReceiveCreateChat
   | IRequestDeleteChat
-  | IReceiveDeleteChat;
+  | IReceiveDeleteChat
+  | IConnected
+  | IDisconnected
+  | IMessageAction;
