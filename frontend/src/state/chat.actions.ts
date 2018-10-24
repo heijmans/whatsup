@@ -1,7 +1,7 @@
 import { uuidv4 } from "../lib/helpers";
 import { SimpleThunkAction } from "../lib/types";
 import { AppAction } from "./actions";
-import chatService, { IMessageAction } from "./chat.service";
+import chatService from "./chat.service";
 import { getTokenOrThrow } from "./selectors";
 import { IChat, IState } from "./state";
 
@@ -67,7 +67,7 @@ export function createChat(name: string): SimpleThunkAction<IState> {
     dispatch(requestCreateChat(name));
     const chat = await chatService.create(token, name);
     dispatch(receiveCreateChat(chat));
-    dispatch(fetchChats());
+    dispatch(refresh());
   };
 }
 
@@ -101,7 +101,7 @@ export function deleteChat(id: number): SimpleThunkAction<IState> {
     dispatch(requestDeleteChat(id));
     await chatService.delete(token, id);
     dispatch(receiveDeleteChat(id));
-    dispatch(fetchChats());
+    dispatch(refresh());
   };
 }
 
@@ -125,6 +125,14 @@ export const DISCONNECTED = "DISCONNECTED";
 
 export function disconnected(): IDisconnected {
   return { type: DISCONNECTED };
+}
+
+export interface IMessageAction {
+  type: "MESSAGE";
+  uuid: string;
+  from?: string;
+  chatId: number;
+  content: string;
 }
 
 export const MESSAGE = "MESSAGE";
@@ -154,6 +162,8 @@ export function connect(): SimpleThunkAction<IState> {
       const action: AppAction = JSON.parse(event.data);
       if (action.type === MESSAGE) {
         dispatch(action);
+      } else if (action.type === REFRESH) {
+        dispatch(fetchChats());
       }
     });
 
@@ -170,8 +180,28 @@ export function sendMessage(chatId: number, content: string): SimpleThunkAction<
     if (ws) {
       console.log("send message: " + content);
       const message = messageAction(chatId, content);
-      chatService.sendMessage(ws, message);
+      chatService.sendAction(ws, message);
       dispatch(message);
+    } else {
+      throw new Error("websocket closed, could not send message");
+    }
+  };
+}
+
+export interface IRefresh {
+  type: "REFRESH";
+}
+
+export const REFRESH = "REFRESH";
+
+export function refreshAction(): IRefresh {
+  return { type: REFRESH };
+}
+
+export function refresh(): SimpleThunkAction<IState> {
+  return (_) => {
+    if (ws) {
+      chatService.sendAction(ws, refreshAction());
     } else {
       throw new Error("websocket closed, could not send message");
     }
@@ -212,4 +242,5 @@ export type ChatActions =
   | IConnected
   | IDisconnected
   | IMessageAction
+  | IRefresh
   | IReadChat;

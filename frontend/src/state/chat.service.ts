@@ -1,3 +1,4 @@
+import { AppAction } from "./actions";
 import { IChat } from "./state";
 
 function jwtHeaders(token: string) {
@@ -18,16 +19,9 @@ function checkResponse(response: Response) {
   }
 }
 
-function sendAction(ws: WebSocket, action: any): void {
-  ws.send(JSON.stringify(action));
-}
-
-export interface IMessageAction {
-  type: "MESSAGE";
-  uuid: string;
-  from?: string;
-  chatId: number;
-  content: string;
+interface ITokenAction {
+  type: "TOKEN";
+  token: string;
 }
 
 const chatService = {
@@ -69,7 +63,7 @@ const chatService = {
     const ws = new WebSocket("ws://localhost:4001/ws");
     return new Promise((resolve, reject) => {
       ws.addEventListener("open", () => {
-        sendAction(ws, { type: "TOKEN", token });
+        this.sendAction(ws, { type: "TOKEN", token });
         resolve(ws);
       });
       ws.addEventListener("error", (error) => {
@@ -78,8 +72,8 @@ const chatService = {
     });
   },
 
-  sendMessage(ws: WebSocket, message: IMessageAction) {
-    sendAction(ws, message);
+  sendAction(ws: WebSocket, action: AppAction | ITokenAction) {
+    ws.send(JSON.stringify(action));
   },
 };
 

@@ -1,5 +1,6 @@
 import { AppAction } from "./actions";
 import {
+  IMessageAction,
   MESSAGE,
   READ_CHAT,
   RECEIVE_CHATS,
@@ -9,7 +10,6 @@ import {
   REQUEST_CREATE_CHAT,
   REQUEST_DELETE_CHAT,
 } from "./chat.actions";
-import { IMessageAction } from "./chat.service";
 import { IChat, ILoadEntry, IMessage, IMessagesState } from "./state";
 import { REQUEST_LOGOUT_USER } from "./user.actions";
 
