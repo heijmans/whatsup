@@ -13,18 +13,18 @@
       function runWebSocketTest() {
         const ws = new WebSocket("ws://localhost:4000/echo");
     
-        ws.onopen = function() {
+        ws.addEventListener("open", function() {
           ws.send("message " + (id ++));
           log("message is sent");
-        };
+        });
 
-        ws.onmessage = function (event) { 
+        ws.addEventListener("message", function (event) { 
           log("message is received: " + event.data);
-        };
+        });
 
-        ws.onclose = function() { 
+        ws.addEventListener("close", function() { 
           log("connection is closed"); 
-        };
+        });
       }
     </script>
    </head>
