@@ -4,6 +4,9 @@ import { Redirect, Route, Switch } from "react-router";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { getToken } from "../state/selectors";
 import { IState } from "../state/state";
+import Chats from "./chats.component";
+import Login from "./login.component";
+import Register from "./register.component";
 
 interface IAppConnState {
   token: string | null;
@@ -22,8 +25,8 @@ export function App({ token }: IAppConnState): ReactElement<HTMLDivElement> {
           <Link to="/user/register">Register</Link>
         </div>
         <Switch>
-          <Route exact path="/user/login" render={() => <h1>Login</h1>} />
-          <Route exact path="/user/register" render={() => <h1>Register</h1>} />
+          <Route exact path="/user/login" component={Login} />
+          <Route exact path="/user/register" component={Register} />
           <Redirect to="/user/login" />
         </Switch>
       </div>
@@ -31,7 +34,7 @@ export function App({ token }: IAppConnState): ReactElement<HTMLDivElement> {
   } else {
     return (
       <Switch>
-        <Route exact path="/chats" render={() => <h1>Chats</h1>} />
+        <Route exact path="/chats" component={Chats} />
         <Route
           exact
           path="/chats/:chatId"
