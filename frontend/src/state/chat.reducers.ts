@@ -8,11 +8,11 @@ import {
   REQUEST_DELETE_CHAT,
 } from "./chat.actions";
 import { IChat, IChatState, ILoadEntry } from "./state";
+import { REQUEST_LOGOUT_USER } from "./user.actions";
 
-export default function reduce(
-  state: IChatState = { ids: {}, byId: {} },
-  action: AppAction,
-): IChatState {
+const INITIAL_STATE = { ids: {}, byId: {} };
+
+export default function reduce(state: IChatState = INITIAL_STATE, action: AppAction): IChatState {
   if (action.type === REQUEST_CHATS) {
     return { ...state, ids: { isFetching: true } };
   } else if (action.type === RECEIVE_CHATS) {
@@ -31,6 +31,8 @@ export default function reduce(
     return { ...state, isFetching: true };
   } else if (action.type === RECEIVE_DELETE_CHAT) {
     return state; // we'll reload the chat list
+  } else if (action.type === REQUEST_LOGOUT_USER) {
+    return INITIAL_STATE;
   } else {
     return state;
   }

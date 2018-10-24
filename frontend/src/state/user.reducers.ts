@@ -5,6 +5,7 @@ import {
   RECEIVE_REGISTER_USER,
   RECEIVE_USER,
   REQUEST_LOGIN_USER,
+  REQUEST_LOGOUT_USER,
   REQUEST_REGISTER_USER,
   REQUEST_USER,
 } from "./user.actions";
@@ -20,6 +21,8 @@ export function userReducer(state: ILoadEntry<IUser> = {}, action: AppAction): I
     return {};
   } else if (action.type === REQUEST_LOGIN_USER) {
     return { isFetching: true };
+  } else if (action.type === REQUEST_LOGOUT_USER) {
+    return {};
   } else {
     return state;
   }
@@ -28,6 +31,8 @@ export function userReducer(state: ILoadEntry<IUser> = {}, action: AppAction): I
 export function tokenReducer(state: string | null = null, action: AppAction): string | null {
   if (action.type === RECEIVE_LOGIN_USER) {
     return action.token;
+  } else if (action.type === REQUEST_LOGOUT_USER) {
+    return null;
   } else {
     return state;
   }

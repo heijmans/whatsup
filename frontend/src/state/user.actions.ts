@@ -100,6 +100,26 @@ export function loginUser(username: string, password: string): SimpleThunkAction
     const token = await userService.login(username, password);
     dispatch(receiveLoginUser(token));
     dispatch(fetchUser());
+    dispatch(fetchChats());
+  };
+}
+
+// logout
+
+export interface IRequestLogoutUser {
+  type: "REQUEST_LOGOUT_USER";
+}
+
+export const REQUEST_LOGOUT_USER = "REQUEST_LOGOUT_USER";
+
+export function requestLogoutUser() {
+  return { type: REQUEST_LOGOUT_USER };
+}
+
+export function logoutUser(): SimpleThunkAction<IState> {
+  return async (dispatch) => {
+    dispatch(requestLogoutUser());
+    dispatch(disconnect());
   };
 }
 
@@ -109,4 +129,5 @@ export type UserAction =
   | IRequestRegisterUser
   | IReceiveRegisterUser
   | IRequestLoginUser
-  | IReceiveLoginUser;
+  | IReceiveLoginUser
+  | IRequestLogoutUser;
