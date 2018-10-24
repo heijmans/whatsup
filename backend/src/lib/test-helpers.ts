@@ -17,6 +17,7 @@ export class MockResponse {
 export interface IRequest {
   params: { [key: string]: string };
   body?: any;
+  user?: any;
 }
 
 export type RequestHandler = (req: IRequest, resp: MockResponse) => void;
