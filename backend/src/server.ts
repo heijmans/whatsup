@@ -14,13 +14,11 @@ expressWs(app);
 // import this after expressWs has setup the app
 import wsController from "./chats/ws.controller";
 
-if (1 > 2) {
-  app.use(
-    expressJwt({ secret: secrets.jwt }).unless({
-      path: ["/user/register", "/user/login"],
-    }),
-  );
-}
+app.use(
+  expressJwt({ secret: secrets.jwt }).unless({
+    path: ["/api/user/register", "/api/user/login"],
+  }),
+);
 
 const apiRouter = express.Router();
 apiRouter.use("/chats", chatController);
