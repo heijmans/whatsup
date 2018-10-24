@@ -1,0 +1,18 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  color: #333;
+  font-family: Avenir, "Avenir Next", Roboto, Calibri, "Helvetica Neue", Arial, Helvetica,
+    sans-serif;
+}
+
+a {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #d33;
+  &:hover {
+    background-color: #fdd;
+  }
+}
