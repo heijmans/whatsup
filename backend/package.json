@@ -41,9 +41,9 @@
     "test": "jest --forceExit --detectOpenHandles --watch"
   },
   "jest": {
-    "clearMocks": true,
     "coverageDirectory": "tmp/coverage",
     "preset": "ts-jest",
+    "restoreMocks": true,
     "rootDir": "src",
     "setupFiles": [
       "<rootDir>/testSetup.ts"
