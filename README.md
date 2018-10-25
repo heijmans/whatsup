@@ -31,6 +31,10 @@ Run migrations:
 
     yarn migrate
 
+Create `secrets.js` with jwt secret (this file is not checked in):
+
+    echo 'module.exports = {"jwt":"VERY_SECRET_REPLACE_ME"};' > config/secrets.js
+
 Start development server:
 
     yarn start
