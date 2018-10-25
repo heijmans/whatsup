@@ -21,7 +21,6 @@ interface ITokenAction {
 
 interface IMessageAction {
   type: "MESSAGE";
-  uuid: string;
   from: string;
   chatId: number;
   content: string;
