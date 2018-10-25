@@ -45,7 +45,7 @@ export class MockWS {
     return fn.apply(null, args);
   }
 
-  public mockSend(message: any): any {
+  public receive(message: any): any {
     return this.emit("message", JSON.stringify(message));
   }
 

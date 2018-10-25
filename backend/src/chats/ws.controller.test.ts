@@ -15,7 +15,7 @@ async function openWS(username: string): Promise<MockWS> {
   toSpy(User.findById).mockResolvedValue({ id: 15, username });
   const ws = mockController.doWS("/");
   const token = jwt.sign({ userId: 15 }, secrets.jwt);
-  await ws.mockSend({ type: "TOKEN", token });
+  await ws.receive({ type: "TOKEN", token });
   expect(User.findById).toHaveBeenCalledWith(15);
   return ws;
 }
@@ -29,7 +29,7 @@ describe("ws controller", () => {
 
   it("should close the connection when an unauthorized message is received", async () => {
     const ws = mockController.doWS("/");
-    await ws.mockSend({ content: "hello" });
+    await ws.receive({ content: "hello" });
     expect(ws.closed).toBe(true);
   });
 
@@ -38,10 +38,10 @@ describe("ws controller", () => {
     const ws2 = await openWS("kees");
     const ws3 = await openWS("piet");
 
-    await ws1.mockSend({ type: "MESSAGE", chatId: 7, content: "m1" });
-    await ws1.mockSend({ type: "MESSAGE", chatId: 7, content: "m2" });
-    await ws2.mockSend({ type: "MESSAGE", chatId: 8, content: "m3" });
-    await ws2.mockSend({ type: "OTHER" });
+    await ws1.receive({ type: "MESSAGE", chatId: 7, content: "m1" });
+    await ws1.receive({ type: "MESSAGE", chatId: 7, content: "m2" });
+    await ws2.receive({ type: "MESSAGE", chatId: 8, content: "m3" });
+    await ws2.receive({ type: "OTHER" });
 
     expect(ws1.messages).toEqual([
       { type: "MESSAGE", from: "kees", chatId: 8, content: "m3" },
