@@ -47,8 +47,10 @@ function handleAction(client: IClient, action: Action) {
     action = { ...action, from: client.user.username };
   }
   const msg = JSON.stringify(action);
-  clients.forEach(({ ws }) => {
-    ws.send(msg);
+  clients.forEach((c) => {
+    if (c !== client) {
+      c.ws.send(msg);
+    }
   });
 }
 
