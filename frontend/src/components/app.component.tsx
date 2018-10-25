@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import { connect } from "react-redux";
 import { Redirect, Route, Switch } from "react-router";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import { getToken } from "../state/selectors";
 import { IState } from "../state/state";
 import Chat from "./chat.component";
@@ -20,11 +20,7 @@ interface IRouteParams {
 export function App({ token }: IAppConnState): ReactElement<HTMLDivElement> {
   if (!token) {
     return (
-      <div>
-        <div>
-          <Link to="/user/login">Login</Link>
-          <Link to="/user/register">Register</Link>
-        </div>
+      <div className="app">
         <Switch>
           <Route exact path="/user/login" component={Login} />
           <Route exact path="/user/register" component={Register} />
@@ -34,17 +30,19 @@ export function App({ token }: IAppConnState): ReactElement<HTMLDivElement> {
     );
   } else {
     return (
-      <Switch>
-        <Route exact path="/chats" component={Chats} />
-        <Route
-          exact
-          path="/chats/:chatId"
-          render={({ match }: RouteComponentProps<IRouteParams>) => (
-            <Chat chatId={parseInt(match.params.chatId!, 10)} />
-          )}
-        />
-        <Redirect to="/chats" />
-      </Switch>
+      <div className="app">
+        <Switch>
+          <Route exact path="/chats" component={Chats} />
+          <Route
+            exact
+            path="/chats/:chatId"
+            render={({ match }: RouteComponentProps<IRouteParams>) => (
+              <Chat chatId={parseInt(match.params.chatId!, 10)} />
+            )}
+          />
+          <Redirect to="/chats" />
+        </Switch>
+      </div>
     );
   }
 }

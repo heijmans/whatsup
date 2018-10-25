@@ -3,11 +3,12 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { AppThunkDispatch } from "../state/actions";
 import { createChat, deleteChat } from "../state/chat.actions";
-import { getChats } from "../state/selectors";
+import { getChats, getUnread } from "../state/selectors";
 import { IChat, IState } from "../state/state";
 import { logoutUser } from "../state/user.actions";
 
 interface IChatsConnState {
+  unread?: number;
   chats?: IChat[];
 }
 
@@ -28,7 +29,7 @@ export class Chats extends Component<IChatsConnState & IChatsConnActions, IChats
   }
 
   public render(): ReactNode {
-    const { chats, logoutUser: logout } = this.props;
+    const { chats, logoutUser: logout, unread } = this.props;
     if (!chats) {
       return <h3>Loading...</h3>;
     }
@@ -36,24 +37,29 @@ export class Chats extends Component<IChatsConnState & IChatsConnActions, IChats
     const { newName } = this.state;
     return (
       <div>
-        <a onClick={logout}>Logout</a>
-        <h1>Chats</h1>
-        <ul>
+        <div className="header">
+          <div className="header-item">{!!unread && <div className="unread">{unread}</div>}</div>
+          <h1 className="header-title">Chats</h1>
+          <a className="header-button" onClick={logout}>
+            Logout
+          </a>
+        </div>
+        <div className="list">
           {chats.map((chat) => (
-            <li key={chat.id}>
-              <Link to={`/chats/${chat.id}`}>
+            <div className="item" key={chat.id}>
+              <Link className="item-title" to={`/chats/${chat.id}`}>
                 {chat.name}
-                {chat.unread ? ` (${chat.unread})` : ""}
-              </Link>{" "}
-              <a onClick={() => this.handleDelete(chat)}>X</a>
-            </li>
+                {!!chat.unread && <div className="unread">{chat.unread}</div>}
+              </Link>
+              <a className="item-delete" onClick={() => this.handleDelete(chat)}>
+                X
+              </a>
+            </div>
           ))}
-        </ul>
-        <form onSubmit={this.handleSubmit}>
-          <p>
-            <input onChange={this.handleNameChange} value={newName} />
-            <button>Add</button>
-          </p>
+        </div>
+        <form className="form-horizontal" onSubmit={this.handleSubmit}>
+          <input onChange={this.handleNameChange} value={newName} />
+          <button>Add</button>
         </form>
       </div>
     );
@@ -79,6 +85,7 @@ export class Chats extends Component<IChatsConnState & IChatsConnActions, IChats
 
 const mapStateToProps = (state: IState): IChatsConnState => ({
   chats: getChats(state),
+  unread: getUnread(state),
 });
 
 const mapDispatchToProps = (dispatch: AppThunkDispatch): IChatsConnActions => ({

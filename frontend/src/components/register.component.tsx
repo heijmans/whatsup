@@ -1,5 +1,6 @@
 import React, { ChangeEvent, Component, FormEvent, ReactNode } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import { AppThunkDispatch } from "../state/actions";
 import { IState } from "../state/state";
 import { registerUser } from "../state/user.actions";
@@ -22,25 +23,40 @@ export class Register extends Component<IRegisterConnActions, IRegisterState> {
   public render(): ReactNode {
     const { username, password } = this.state;
     return (
-      <form onSubmit={this.handleSubmit}>
-        <h1>Register</h1>
-        <p>
-          <label htmlFor="username">Username: </label>
-          <input id="username" type="text" value={username} onChange={this.handleUsernameChange} />
-        </p>
-        <p>
-          <label htmlFor="password">Password: </label>
-          <input
-            id="username"
-            type="password"
-            value={password}
-            onChange={this.handlePasswordChange}
-          />
-        </p>
-        <p>
-          <button>Register</button>
-        </p>
-      </form>
+      <div>
+        <div className="header">
+          <div className="header-item" />
+          <h1 className="header-title">Register</h1>
+          <Link className="header-button" to="/user/login">
+            Login
+          </Link>
+        </div>
+        <div className="body">
+          <form onSubmit={this.handleSubmit}>
+            <div className="form-control">
+              <label htmlFor="username">Username: </label>
+              <input
+                id="username"
+                type="text"
+                value={username}
+                onChange={this.handleUsernameChange}
+              />
+            </div>
+            <div className="form-control">
+              <label htmlFor="password">Password: </label>
+              <input
+                id="username"
+                type="password"
+                value={password}
+                onChange={this.handlePasswordChange}
+              />
+            </div>
+            <div className="form-control">
+              <button>Register</button>
+            </div>
+          </form>
+        </div>
+      </div>
     );
   }
 
