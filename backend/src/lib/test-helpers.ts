@@ -46,10 +46,7 @@ export class MockWS {
   }
 
   public mockSend(message: any): any {
-    if (typeof message !== "string") {
-      message = JSON.stringify(message);
-    }
-    return this.emit("message", message);
+    return this.emit("message", JSON.stringify(message));
   }
 
   public send(message: string): void {
