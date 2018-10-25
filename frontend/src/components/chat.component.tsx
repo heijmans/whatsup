@@ -61,8 +61,8 @@ export class Chat extends Component<IChatProps & IChatConnState & IChatConnActio
         </Link>
         <h1>{chat.name}</h1>
         <ul>
-          {messages.map((message) => (
-            <li key={message.uuid}>
+          {messages.map((message, index) => (
+            <li key={index}>
               from: {message.from || "you"}
               <br />
               {message.content}

@@ -1,6 +1,5 @@
 import { AppAction } from "./actions";
 import {
-  IMessageAction,
   MESSAGE,
   READ_CHAT,
   RECEIVE_CHATS,
@@ -10,7 +9,7 @@ import {
   REQUEST_CREATE_CHAT,
   REQUEST_DELETE_CHAT,
 } from "./chat.actions";
-import { IChat, ILoadEntry, IMessage, IMessagesState } from "./state";
+import { IChat, ILoadEntry, IMessagesState } from "./state";
 import { REQUEST_LOGOUT_USER } from "./user.actions";
 
 function resetUnread(chat: IChat, chatId: number): IChat {
@@ -62,20 +61,11 @@ export function chatReducer(
   }
 }
 
-function addMessage(messages: IMessage[], action: IMessageAction) {
-  const { uuid } = action;
-  if (messages.find((m) => m.uuid === uuid)) {
-    return messages;
-  } else {
-    return messages.concat(action);
-  }
-}
-
 export function messageReducer(state: IMessagesState = {}, action: AppAction): IMessagesState {
   if (action.type === MESSAGE) {
     const { chatId } = action;
     const messages = state[chatId] || [];
-    return { ...state, [chatId]: addMessage(messages, action) };
+    return { ...state, [chatId]: messages.concat(action) };
   } else {
     return state;
   }

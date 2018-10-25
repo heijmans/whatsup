@@ -9,7 +9,6 @@ export interface IUser {
 }
 
 export interface IMessage {
-  uuid: string;
   from?: string;
   chatId: number;
   content: string;

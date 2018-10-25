@@ -1,4 +1,3 @@
-import { uuidv4 } from "../lib/helpers";
 import { SimpleThunkAction } from "../lib/types";
 import { AppAction } from "./actions";
 import chatService from "./chat.service";
@@ -129,7 +128,6 @@ export function disconnected(): IDisconnected {
 
 export interface IMessageAction {
   type: "MESSAGE";
-  uuid: string;
   from?: string;
   chatId: number;
   content: string;
@@ -138,8 +136,7 @@ export interface IMessageAction {
 export const MESSAGE = "MESSAGE";
 
 export function messageAction(chatId: number, content: string): IMessageAction {
-  const uuid = uuidv4();
-  return { type: MESSAGE, uuid, chatId, content };
+  return { type: MESSAGE, chatId, content };
 }
 
 let ws: WebSocket | undefined;
