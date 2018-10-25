@@ -31,15 +31,15 @@ export class Chat extends Component<IChatProps & IChatConnState & IChatConnActio
     this.state = { content: "" };
   }
 
-  public componentDidMount() {
+  public componentDidMount(): void {
     this.readChat();
   }
 
-  public componentDidUpdate() {
+  public componentDidUpdate(): void {
     this.readChat();
   }
 
-  public readChat() {
+  public readChat(): void {
     const { chat } = this.props;
     if (chat && chat.unread) {
       this.props.readChat();

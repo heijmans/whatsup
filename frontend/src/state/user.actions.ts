@@ -114,7 +114,7 @@ export interface IRequestLogoutUser {
 
 export const REQUEST_LOGOUT_USER = "REQUEST_LOGOUT_USER";
 
-export function requestLogoutUser() {
+export function requestLogoutUser(): IRequestLogoutUser {
   return { type: REQUEST_LOGOUT_USER };
 }
 

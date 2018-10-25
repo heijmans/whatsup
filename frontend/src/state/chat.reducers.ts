@@ -20,7 +20,7 @@ function incrementUnread(chat: IChat, chatId: number): IChat {
   return chat.id === chatId ? { ...chat, unread: (chat.unread || 0) + 1 } : chat;
 }
 
-function mergeChats(newChats: IChat[], oldChats: IChat[]) {
+function mergeChats(newChats: IChat[], oldChats: IChat[]): IChat[] {
   return newChats.map((newChat) => {
     const oldChat = oldChats.find((c) => c.id === newChat.id);
     if (oldChat) {

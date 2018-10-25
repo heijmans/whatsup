@@ -1,18 +1,18 @@
 import { IUser } from "./state";
 
-function jwtHeaders(token: string) {
+function jwtHeaders(token: string): { [key: string]: string } {
   return {
     Authorization: `Bearer ${token}`,
   };
 }
 
-function jsonBody() {
+function jsonBody(): { [key: string]: string } {
   return {
     "Content-Type": "application/json",
   };
 }
 
-function checkResponse(response: Response) {
+function checkResponse(response: Response): void {
   if (response.status >= 300) {
     throw new Error(`error: ${response.status}`);
   }
