@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get("/", async (_, res) => {
   try {
-    const chats = await Chat.findAll();
+    const chats = await Chat.findAll({ order: [["name"]] });
     res.json(chats.map(cleanChat));
   } catch (e) {
     console.warn(e);
