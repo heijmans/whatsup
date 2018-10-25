@@ -20,14 +20,27 @@ function incrementUnread(chat: IChat, chatId: number): IChat {
   return chat.id === chatId ? { ...chat, unread: (chat.unread || 0) + 1 } : chat;
 }
 
+function mergeChats(newChats: IChat[], oldChats: IChat[]) {
+  return newChats.map((newChat) => {
+    const oldChat = oldChats.find((c) => c.id === newChat.id);
+    if (oldChat) {
+      return { ...newChat, unread: oldChat.unread };
+    } else {
+      return newChat;
+    }
+  });
+}
+
 export function chatReducer(
   state: ILoadEntry<IChat[]> = {},
   action: AppAction,
 ): ILoadEntry<IChat[]> {
   if (action.type === REQUEST_CHATS) {
-    return { isFetching: true };
+    return { ...state, isFetching: true };
   } else if (action.type === RECEIVE_CHATS) {
-    return { data: action.data };
+    const oldChats = state.data || [];
+    const chats = mergeChats(action.data, oldChats);
+    return { data: chats };
   } else if (action.type === REQUEST_CREATE_CHAT) {
     return { isFetching: true };
   } else if (action.type === RECEIVE_CREATE_CHAT) {
