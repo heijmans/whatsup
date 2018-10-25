@@ -23,7 +23,7 @@ describe("chat controller", () => {
   it("should get all chats", async () => {
     toSpy(Chat.findAll).mockResolvedValue(MOCK_CHATS);
     const response = mockController.doGet("/", { params: {} });
-    expect(toSpy(Chat.findAll)).toHaveBeenCalledWith();
+    expect(toSpy(Chat.findAll)).toHaveBeenCalledWith({ order: [["name"]] });
 
     await Promise.resolve();
     expect(response.json).toHaveBeenCalledWith(MOCK_CHATS);
