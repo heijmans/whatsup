@@ -41,9 +41,11 @@ describe("ws controller", () => {
     await ws1.mockSend({ type: "MESSAGE", chatId: 7, content: "m1" });
     await ws1.mockSend({ type: "MESSAGE", chatId: 7, content: "m2" });
     await ws2.mockSend({ type: "MESSAGE", chatId: 8, content: "m3" });
+    await ws2.mockSend({ type: "OTHER" });
 
     expect(ws1.messages).toEqual([
       { type: "MESSAGE", from: "kees", chatId: 8, content: "m3" },
+      { type: "OTHER" },
     ]);
 
     expect(ws2.messages).toEqual([
@@ -55,6 +57,7 @@ describe("ws controller", () => {
       { type: "MESSAGE", from: "jan", chatId: 7, content: "m1" },
       { type: "MESSAGE", from: "jan", chatId: 7, content: "m2" },
       { type: "MESSAGE", from: "kees", chatId: 8, content: "m3" },
+      { type: "OTHER" },
     ]);
 
     ws1.close();
