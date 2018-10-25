@@ -79,6 +79,8 @@ export function messageReducer(state: IMessagesState = {}, action: AppAction): I
     const { chatId } = action;
     const messages = state[chatId] || [];
     return { ...state, [chatId]: messages.concat(action) };
+  } else if (action.type === REQUEST_LOGOUT_USER) {
+    return {};
   } else {
     return state;
   }
