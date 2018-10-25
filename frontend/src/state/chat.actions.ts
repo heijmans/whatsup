@@ -191,7 +191,9 @@ export function refreshAction(): IRefresh {
 }
 
 export function refresh(): SimpleThunkAction<IState> {
-  return (_) => {
+  return (dispatch) => {
+    dispatch(fetchChats());
+
     if (ws) {
       chatService.sendAction(ws, refreshAction());
     } else {
