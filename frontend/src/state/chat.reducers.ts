@@ -42,11 +42,11 @@ export function chatReducer(
     const chats = mergeChats(action.data, oldChats);
     return { data: chats };
   } else if (action.type === REQUEST_CREATE_CHAT) {
-    return { isFetching: true };
+    return { ...state, isFetching: true };
   } else if (action.type === RECEIVE_CREATE_CHAT) {
     return state; // we'll reload the chat list
   } else if (action.type === REQUEST_DELETE_CHAT) {
-    return { isFetching: true };
+    return { ...state, isFetching: true };
   } else if (action.type === RECEIVE_DELETE_CHAT) {
     return state; // we'll reload the chat list
   } else if (action.type === REQUEST_LOGOUT_USER) {
