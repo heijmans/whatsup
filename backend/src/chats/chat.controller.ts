@@ -1,7 +1,12 @@
 import express from "express";
 import Chat from "./chat.model";
 
-function cleanChat({ id, name }: Chat) {
+interface IChatView {
+  id: number;
+  name: string;
+}
+
+function cleanChat({ id, name }: Chat): IChatView {
   return { id, name };
 }
 

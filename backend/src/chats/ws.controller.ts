@@ -36,12 +36,12 @@ function addClient(user: User, ws: WS): IClient {
   return client;
 }
 
-function removeClient(client: IClient) {
+function removeClient(client: IClient): void {
   const index = clients.indexOf(client);
   clients.splice(index, 1);
 }
 
-function handleAction(client: IClient, action: Action) {
+function handleAction(client: IClient, action: Action): void {
   if (action.type === "MESSAGE") {
     action = { ...action, from: client.user.username };
   }

@@ -4,7 +4,12 @@ import jwt from "jsonwebtoken";
 import secrets from "../../config/secrets";
 import User from "./user.model";
 
-function cleanUser({ id, username }: User) {
+interface IUserView {
+  id: number;
+  username: string;
+}
+
+function cleanUser({ id, username }: User): IUserView {
   return { id, username };
 }
 

@@ -4,7 +4,7 @@ import { BeforeCreate, Column, Model, Table } from "sequelize-typescript";
 @Table({ tableName: "users", timestamps: true })
 export default class User extends Model<User> {
   @BeforeCreate
-  public static encryptPassword(user: User) {
+  public static encryptPassword(user: User): void {
     const salt = bcrypt.genSaltSync();
     user.password = bcrypt.hashSync(user.password, salt);
   }
@@ -20,7 +20,7 @@ export default class User extends Model<User> {
   @Column({ allowNull: false })
   public password!: string;
 
-  public validatePassword(password: string) {
+  public validatePassword(password: string): boolean {
     return bcrypt.compareSync(password, this.password);
   }
 }

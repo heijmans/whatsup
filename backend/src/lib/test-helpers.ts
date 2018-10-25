@@ -32,7 +32,7 @@ export class MockWS {
 
   private listeners: { [key: string]: Listener } = {};
 
-  public on(key: string, fn: Listener) {
+  public on(key: string, fn: Listener): void {
     const listener = this.listeners[key];
     if (listener) {
       throw new Error("only a single listener is supported");
@@ -40,23 +40,23 @@ export class MockWS {
     this.listeners[key] = fn;
   }
 
-  public emit(key: string, ...args: any[]) {
+  public emit(key: string, ...args: any[]): any {
     const fn = this.listeners[key];
     return fn.apply(null, args);
   }
 
-  public mockSend(message: any) {
+  public mockSend(message: any): any {
     if (typeof message !== "string") {
       message = JSON.stringify(message);
     }
     return this.emit("message", message);
   }
 
-  public send(message: string) {
+  public send(message: string): void {
     this.messages.push(JSON.parse(message));
   }
 
-  public close() {
+  public close(): any {
     this.closed = true;
     const res = this.emit("close");
     this.listeners = {};
@@ -77,19 +77,19 @@ export class MockRouter {
   private routes: { [key: string]: RequestHandler } = {};
   private wsRoutes: { [path: string]: WSRequestHandler } = {};
 
-  public get(path: string, fn: RequestHandler) {
+  public get(path: string, fn: RequestHandler): void {
     this.request("GET", path, fn);
   }
 
-  public post(path: string, fn: RequestHandler) {
+  public post(path: string, fn: RequestHandler): void {
     this.request("POST", path, fn);
   }
 
-  public delete(path: string, fn: RequestHandler) {
+  public delete(path: string, fn: RequestHandler): void {
     this.request("DELETE", path, fn);
   }
 
-  public ws(path: string, fn: WSRequestHandler) {
+  public ws(path: string, fn: WSRequestHandler): void {
     this.wsRoutes[path] = fn;
   }
 
@@ -105,7 +105,7 @@ export class MockRouter {
     return this.doRequest("DELETE", path, req);
   }
 
-  public doWS(path: string, req: IRequest = { params: {} }) {
+  public doWS(path: string, req: IRequest = { params: {} }): MockWS {
     const ws = new MockWS();
     const fn = this.wsRoutes[path];
     if (!fn) {
@@ -115,7 +115,7 @@ export class MockRouter {
     return ws;
   }
 
-  private request(method: string, path: string, fn: RequestHandler) {
+  private request(method: string, path: string, fn: RequestHandler): void {
     this.routes[`${method} ${path}`] = fn;
   }
 

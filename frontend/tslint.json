@@ -3,6 +3,6 @@
   "rules": {
     "no-console": false,
     "semicolon": [true, "strict-bound-class-methods"],
-    "typedef": [true, "call-signature", "parameter", "member-variable-declaration"]
+    "typedef": [true, "call-signature", "parameter"]
   }
 }
