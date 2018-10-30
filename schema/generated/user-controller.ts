@@ -6,7 +6,7 @@ import express, { Router } from "express";
 import { LoginResult, User, UserLogin, UserRegister } from "./api-types";
 
 export interface IUserService {
-  getUser: (token: string) => Promise<User>;
+  getUser: (authorization: string) => Promise<User>;
   registerUser: (body: UserRegister) => Promise<User>;
   login: (body: UserLogin) => Promise<LoginResult>;
 }
@@ -16,8 +16,8 @@ export function createUserController(service: IUserService): Router {
 
   router.get("/user", async (req, res) => {
     try {
-      const token = req.headers.token as string;
-      const result = await service.getUser(token);
+      const authorization = req.headers.authorization as string;
+      const result = await service.getUser(authorization);
       res.json(result);
     } catch (e) {
       console.warn(e);

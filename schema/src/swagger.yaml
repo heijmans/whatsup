@@ -11,7 +11,7 @@ paths:
       tags:
         - user
       parameters:
-        - name: token
+        - name: authorization
           in: header
           required: true
           schema:
