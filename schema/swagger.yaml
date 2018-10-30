@@ -24,6 +24,7 @@ paths:
       operationId: registerUser
       tags:
       - user
+      security: []
       requestBody:
         required: true
         content:
@@ -44,6 +45,7 @@ paths:
       operationId: login
       tags:
       - user
+      security: []
       requestBody:
         required: true
         content:
@@ -137,6 +139,9 @@ tags:
 - name: chat
   description: "chat operations"
 
+security:
+- bearer: []
+
 components:
   schemas:
     User:
@@ -201,3 +206,9 @@ components:
           type: string
       required:
       - name
+
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
