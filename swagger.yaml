@@ -1,4 +1,4 @@
-swagger: "2.0"
+openapi: "3.0.0"
 info:
   version: "0.1.0"
   title: whatsup
@@ -8,168 +8,196 @@ paths:
       summary: get user profile
       description: ""
       operationId: getUser
-      produces:
-      - application/json
+      tags:
+      - user
       responses:
         200:
           description: ""
-          schema:
-            $ref: "#/definitions/User"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
   /user/register:
     post:
       summary: register a user
       description: ""
       operationId: registerUser
-      consumes:
-      - application/json
-      parameters:
-      - name: body
-        in: body
+      tags:
+      - user
+      requestBody:
         required: true
-        schema:
-          $ref: "#/definitions/UserRegister"
-      produces:
-      - application/json
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRegister"
       responses:
         200:
           description: ""
-          schema:
-            $ref: "#/definitions/User"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
   /user/login:
     post:
       summary: login
       description: ""
       operationId: login
-      consumes:
-      - application/json
-      parameters:
-      - name: body
-        in: body
+      tags:
+      - user
+      requestBody:
         required: true
-        schema:
-          $ref: "#/definitions/UserLogin"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLogin"
       responses:
         200:
           description: success
-        401:
-          description: failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResult"
 
   /chats:
     get:
       summary: get all chats
       description: ""
       operationId: listChats
-      produces:
-      - application/json
+      tags:
+      - chat
       responses:
         200:
           description: ""
-          schema:
-            $ref: "#/definitions/Chats"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Chats"
     post:
       summary: create a chat
       description: ""
       operationId: createChat
-      consumes:
-      - application/json
-      parameters:
-      - name: body
-        in: body
+      tags:
+      - chat
+      requestBody:
         required: true
-        schema:
-          $ref: "#/definitions/ChatCreate"
-      produces:
-      - application/json
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatCreate"
       responses:
         200:
           description: ""
-          schema:
-            $ref: "#/definitions/Chat"
-  "/chats/{id}":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Chat"
+  /chats/{id}:
     get:
       summary: get a chat
       description: ""
       operationId: getChat
+      tags:
+      - chat
       parameters:
       - name: id
         in: path
         description: chat id
         required: true
-        type: integer
-        format: int64
-      produces:
-      - application/json
+        schema:
+          type: integer
+          format: int64
       responses:
         200:
           description: ""
-          schema:
-            $ref: "#/definitions/Chat"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Chat"
     delete:
       summary: delete a chat
       description: ""
       operationId: deleteChat
+      tags:
+      - chat
       parameters:
       - name: id
         in: path
         description: chat id
         required: true
-        type: integer
-        format: int64
+        schema:
+          type: integer
+          format: int64
       responses:
         200:
           description: ""
 
-definitions:
-  User:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-      username:
-        type: string
-    required:
+tags:
+- name: user
+  description: "user operations"
+- name: chat
+  description: "chat operations"
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+      required:
       - id
       - username
-  UserRegister:
-    type: object
-    properties:
-      username:
-        type: string
-      password:
-        type: string
-    required:
+    UserRegister:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
       - username
       - password
-  UserLogin:
-    type: object
-    properties:
-      username:
-        type: string
-      password:
-        type: string
-    required:
+    UserLogin:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
       - username
       - password
-  Chats:
-    type: array
-    items:
-      $ref: "#/definitions/Chat"
-  Chat:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-      name:
-        type: string
-    required:
+    LoginResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        token:
+          type: string
+      required:
+      - success
+    Chats:
+      type: array
+      items:
+        $ref: "#/components/schemas/Chat"
+    Chat:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      required:
       - id
       - name
-  ChatCreate:
-    type: object
-    properties:
-      name:
-        type: string
-    required:
+    ChatCreate:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
       - name
