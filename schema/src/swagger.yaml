@@ -10,6 +10,12 @@ paths:
       operationId: getUser
       tags:
         - user
+      parameters:
+        - name: token
+          in: header
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: ""
