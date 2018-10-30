@@ -9,7 +9,7 @@ paths:
       description: ""
       operationId: getUser
       tags:
-      - user
+        - user
       responses:
         200:
           description: ""
@@ -23,7 +23,7 @@ paths:
       description: ""
       operationId: registerUser
       tags:
-      - user
+        - user
       security: []
       requestBody:
         required: true
@@ -44,7 +44,7 @@ paths:
       description: ""
       operationId: login
       tags:
-      - user
+        - user
       security: []
       requestBody:
         required: true
@@ -66,7 +66,7 @@ paths:
       description: ""
       operationId: listChats
       tags:
-      - chat
+        - chat
       responses:
         200:
           description: ""
@@ -79,7 +79,7 @@ paths:
       description: ""
       operationId: createChat
       tags:
-      - chat
+        - chat
       requestBody:
         required: true
         content:
@@ -99,15 +99,15 @@ paths:
       description: ""
       operationId: getChat
       tags:
-      - chat
+        - chat
       parameters:
-      - name: id
-        in: path
-        description: chat id
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          description: chat id
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         200:
           description: ""
@@ -120,27 +120,27 @@ paths:
       description: ""
       operationId: deleteChat
       tags:
-      - chat
+        - chat
       parameters:
-      - name: id
-        in: path
-        description: chat id
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          description: chat id
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         200:
           description: ""
 
 tags:
-- name: user
-  description: "user operations"
-- name: chat
-  description: "chat operations"
+  - name: user
+    description: "user operations"
+  - name: chat
+    description: "chat operations"
 
 security:
-- bearer: []
+  - bearer: []
 
 components:
   schemas:
@@ -153,8 +153,8 @@ components:
         username:
           type: string
       required:
-      - id
-      - username
+        - id
+        - username
     UserRegister:
       type: object
       properties:
@@ -163,8 +163,8 @@ components:
         password:
           type: string
       required:
-      - username
-      - password
+        - username
+        - password
     UserLogin:
       type: object
       properties:
@@ -173,8 +173,8 @@ components:
         password:
           type: string
       required:
-      - username
-      - password
+        - username
+        - password
     LoginResult:
       type: object
       properties:
@@ -183,7 +183,7 @@ components:
         token:
           type: string
       required:
-      - success
+        - success
     Chats:
       type: array
       items:
@@ -197,15 +197,15 @@ components:
         name:
           type: string
       required:
-      - id
-      - name
+        - id
+        - name
     ChatCreate:
       type: object
       properties:
         name:
           type: string
       required:
-      - name
+        - name
 
   securitySchemes:
     bearer:
