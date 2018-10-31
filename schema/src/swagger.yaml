@@ -201,7 +201,7 @@ components:
     IChats:
       type: array
       items:
-        $ref: "#/components/schemas/Chat"
+        $ref: "#/components/schemas/IChat"
     IChat:
       type: object
       properties:

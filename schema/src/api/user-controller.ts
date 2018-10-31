@@ -17,7 +17,7 @@ export default function createUserController(service: IUserService, jwtSecret: s
 
   router.get("/user", async (req, res) => {
     try {
-      const authorization = getAuthorization<AuthorizationData>(req, jwtSecret);
+      const authorization = getAuthorization<IAuthorizationData>(req, jwtSecret);
       if (!authorization) {
         res.status(403).send("forbidden");
         return;

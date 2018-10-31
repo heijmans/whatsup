@@ -26,7 +26,7 @@ export interface ILoginResult {
   token: string;
 }
 
-export type IChats = Array<Chat>;
+export type IChats = Array<IChat>;
 
 export interface IChat {
   id: number;

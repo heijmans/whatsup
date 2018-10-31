@@ -162,7 +162,7 @@ function generateImports(operations: IOperationInfo[]): string {
 
   const typeSet = new Set<string>();
   if (hasSec) {
-    typeSet.add("AuthorizationData");
+    typeSet.add("IAuthorizationData");
   }
   operations.forEach((operInfo) => {
     const { operation } = operInfo;
@@ -233,7 +233,7 @@ function generateControllerFn(tag: string, operations: IOperationInfo[]): string
 
     if (!operation.security) {
       content +=
-        "      const authorization = getAuthorization<AuthorizationData>(req, jwtSecret);\n";
+        "      const authorization = getAuthorization<IAuthorizationData>(req, jwtSecret);\n";
       content += "      if (!authorization) {\n";
       content += '        res.status(403).send("forbidden");\n';
       content += "        return;\n";
