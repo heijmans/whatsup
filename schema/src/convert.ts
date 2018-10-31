@@ -1,7 +1,6 @@
 /*
 TODO
 reduce function complexity
-jwt token as param
 required
 */
 
