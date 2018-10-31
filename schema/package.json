@@ -28,7 +28,8 @@
     "prettier": "prettier --write 'src/**/*.ts' 'src/**/*.js*' 'src/**/*.yaml' '*.js*'",
     "run": "ts-node src/convert.ts",
     "start": "nodemon -w src -e ts,yaml -x 'yarn run run'",
-    "to_backend": "cp src/api/api-types.ts src/api/*-controller.ts ../backend/src/api/ && cp src/lib/api-controller-helpers.ts ../backend/src/lib/"
+    "to_backend": "cp src/api/api-types.ts src/api/*-controller.ts ../backend/src/api/ && cp src/lib/api-controller-helpers.ts ../backend/src/lib/",
+    "to_frontend": "cp src/api/api-types.ts src/api/*-service.ts ../frontend/src/api/ && cp src/lib/api-service-helpers.ts ../frontend/src/lib/"
   },
   "prettier": {
     "arrowParens": "always",

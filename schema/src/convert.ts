@@ -1,7 +1,7 @@
 /*
 TODO
-reduce function complexity
-required
+extract prefix
+basepath
 */
 
 import fs from "fs";
@@ -20,6 +20,7 @@ import {
 
 const GEN_ROOT = "src/api";
 const GEN_COMMENT = "// auto generated, do not edit\n\n";
+const SERVICE_BASE = "/api";
 
 const oao: OpenAPIObject = yaml.safeLoad(fs.readFileSync("src/swagger.yaml", "utf8"));
 const customTypes: string[] = [];
@@ -369,13 +370,81 @@ function generateServiceImports(operations: IOperationInfo[]): string {
   return content;
 }
 
+function generateServiceObject(tag: string, operations: IOperationInfo[]): string {
+  const service = `${tag}Service`;
+  let content = `const ${service} = {\n`;
+  operations.forEach((operInfo) => {
+    const { method, path, operation } = operInfo;
+    const { operationId, parameters } = operation;
+    const requestBody = operation.requestBody as RequestBodyObject;
+    const hasSec = !operation.security;
+    let url = `${SERVICE_BASE}${path}`;
+    const paramTypes: string[] = [];
+    if (hasSec) {
+      paramTypes.push("token: string");
+    }
+    if (parameters) {
+      parameters.forEach((x) => {
+        const parameter = x as ParameterObject;
+        const { name, in: paramIn, schema } = parameter;
+        if (name === "authorization" && paramIn === "header") {
+          return;
+        }
+        if (paramIn !== "path") {
+          throw new Error("can only handle path parameters");
+        }
+        url = url.replace(`{${name}}`, `\${${name}}`);
+        const type = getType(schema!);
+        paramTypes.push(`${name}: ${type}`);
+      });
+    }
+    if (requestBody) {
+      const bodyName = getBodyName(requestBody);
+      const bodyType = getContentType(requestBody);
+      paramTypes.push(`${bodyName}: ${bodyType}`);
+    }
+    let resultType = "void";
+    const okResponse = operation.responses && operation.responses["200"];
+    if (okResponse && okResponse.content) {
+      resultType = getContentType(okResponse);
+    }
+    content += `  async ${operationId}(${paramTypes.join(", ")}): Promise<${resultType}> {\n`;
+    content += `    const response = await fetch(\`${url}\`, {\n`;
+    if (requestBody) {
+      content += `      body: JSON.stringify(${getBodyName(requestBody)}),\n`;
+    }
+    if (requestBody || hasSec) {
+      const headers: string[] = [];
+      if (requestBody) {
+        headers.push("...jsonBody()");
+      }
+      if (hasSec) {
+        headers.push("...jwtHeaders(token)");
+      }
+      content += `      headers: { ${headers.join(", ")} },\n`;
+    }
+    content += `      method: ${JSON.stringify(method)},\n`;
+    content += `    });\n`;
+    content += `    checkResponse(response);\n`;
+    if (resultType === "void") {
+      content += `    await response.json();\n`;
+    } else {
+      content += `    return await response.json();\n`;
+    }
+    content += `  },\n\n`;
+  });
+  content += `};\n\n`;
+  content += `export default ${service};\n\n`;
+  return content;
+}
+
 function generateService(tag: string): void {
   let content = GEN_COMMENT;
   content += "// tslint:disable: array-type\n\n";
 
   const operations = getOperationsByTag(tag);
   content += generateServiceImports(operations);
-  // content += generateServiceObject(tag, operations);
+  content += generateServiceObject(tag, operations);
 
   write(`${tag}-service.ts`, content);
 }
