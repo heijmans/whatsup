@@ -27,7 +27,8 @@
     "pq": "yarn pretty-quick",
     "prettier": "prettier --write 'src/**/*.ts' 'src/**/*.js*' 'src/**/*.yaml' '*.js*'",
     "run": "ts-node src/convert.ts",
-    "start": "nodemon -w src -e ts,yaml -x 'yarn run run'"
+    "start": "nodemon -w src -e ts,yaml -x 'yarn run run'",
+    "to_backend": "cp src/api/api-types.ts src/api/*-controller.ts ../backend/src/api/ && cp src/lib/api-controller-helpers.ts ../backend/src/lib/"
   },
   "prettier": {
     "arrowParens": "always",

@@ -3,9 +3,11 @@ import express from "express";
 import expressJwt from "express-jwt";
 import expressWs from "express-ws";
 import secrets from "../config/secrets";
-import chatController from "./chats/chat.controller";
+import createChatController from "./api/chat-controller";
+import createUserController from "./api/user-controller";
+import chatService from "./chats/chat.service";
 import "./db";
-import userController from "./users/user.controller";
+import userService from "./users/user.service";
 
 const app = express();
 app.use(bodyParser.json());
@@ -22,8 +24,8 @@ app.use(
 );
 
 const apiRouter = express.Router();
-apiRouter.use("/chats", chatController);
-apiRouter.use("/user", userController);
+apiRouter.use(createChatController(chatService, secrets.jwt));
+apiRouter.use(createUserController(userService, secrets.jwt));
 app.use("/api", apiRouter);
 
 app.use("/ws", wsController);
