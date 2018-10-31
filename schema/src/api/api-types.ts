@@ -2,37 +2,37 @@
 
 // tslint:disable: array-type interface-name
 
-export interface AuthorizationData {
+export interface IAuthorizationData {
   userId: number;
 }
 
-export interface User {
+export interface IUser {
   id: number;
   username: string;
 }
 
-export interface UserRegisterData {
+export interface IUserRegisterData {
   username: string;
   password: string;
 }
 
-export interface UserLoginData {
+export interface IUserLoginData {
   username: string;
   password: string;
 }
 
-export interface LoginResult {
+export interface ILoginResult {
   success: boolean;
   token: string;
 }
 
-export type Chats = Array<Chat>;
+export type IChats = Array<Chat>;
 
-export interface Chat {
+export interface IChat {
   id: number;
   name: string;
 }
 
-export interface ChatCreateData {
+export interface IChatCreateData {
   name: string;
 }

@@ -216,7 +216,7 @@ function generateServiceInterface(tag: string, operations: IOperationInfo[]): st
 function generateControllerFn(tag: string, operations: IOperationInfo[]): string {
   const name = ucfirst(tag);
   const jwtParam = hasSecurity(operations) ? ", jwtSecret: string" : "";
-  let content = `export function create${name}Controller(service: I${name}Service${jwtParam}): Router {\n`;
+  let content = `export default function create${name}Controller(service: I${name}Service${jwtParam}): Router {\n`;
   content += `  const router = express.Router();\n\n`;
   operations.forEach((operInfo) => {
     const { method, path, operation } = operInfo;

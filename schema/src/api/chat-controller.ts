@@ -4,16 +4,16 @@
 
 import express, { Router } from "express";
 import { getAuthorization } from "../lib/api-controller-helpers";
-import { AuthorizationData, Chat, ChatCreateData, Chats } from "./api-types";
+import { IChat, IChatCreateData, IChats } from "./api-types";
 
 export interface IChatService {
-  listChats: () => Promise<Chats>;
-  createChat: (chatCreateData: ChatCreateData) => Promise<Chat>;
-  getChat: (id: number) => Promise<Chat>;
+  listChats: () => Promise<IChats>;
+  createChat: (iChatCreateData: IChatCreateData) => Promise<IChat>;
+  getChat: (id: number) => Promise<IChat>;
   deleteChat: (id: number) => Promise<void>;
 }
 
-export function createChatController(service: IChatService, jwtSecret: string): Router {
+export default function createChatController(service: IChatService, jwtSecret: string): Router {
   const router = express.Router();
 
   router.get("/chats", async (req, res) => {
@@ -38,8 +38,8 @@ export function createChatController(service: IChatService, jwtSecret: string): 
         res.status(403).send("forbidden");
         return;
       }
-      const chatCreateData = req.body as ChatCreateData;
-      const result = await service.createChat(chatCreateData);
+      const iChatCreateData = req.body as IChatCreateData;
+      const result = await service.createChat(iChatCreateData);
       res.json(result);
     } catch (e) {
       console.warn(e);

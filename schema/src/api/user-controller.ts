@@ -4,15 +4,15 @@
 
 import express, { Router } from "express";
 import { getAuthorization } from "../lib/api-controller-helpers";
-import { AuthorizationData, LoginResult, User, UserLoginData, UserRegisterData } from "./api-types";
+import { IAuthorizationData, ILoginResult, IUser, IUserLoginData, IUserRegisterData } from "./api-types";
 
 export interface IUserService {
-  getUser: (authorization: AuthorizationData) => Promise<User>;
-  registerUser: (userRegisterData: UserRegisterData) => Promise<User>;
-  login: (userLoginData: UserLoginData) => Promise<LoginResult>;
+  getUser: (authorization: IAuthorizationData) => Promise<IUser>;
+  registerUser: (iUserRegisterData: IUserRegisterData) => Promise<IUser>;
+  login: (iUserLoginData: IUserLoginData) => Promise<ILoginResult>;
 }
 
-export function createUserController(service: IUserService, jwtSecret: string): Router {
+export default function createUserController(service: IUserService, jwtSecret: string): Router {
   const router = express.Router();
 
   router.get("/user", async (req, res) => {
@@ -32,8 +32,8 @@ export function createUserController(service: IUserService, jwtSecret: string): 
 
   router.post("/user/register", async (req, res) => {
     try {
-      const userRegisterData = req.body as UserRegisterData;
-      const result = await service.registerUser(userRegisterData);
+      const iUserRegisterData = req.body as IUserRegisterData;
+      const result = await service.registerUser(iUserRegisterData);
       res.json(result);
     } catch (e) {
       console.warn(e);
@@ -43,8 +43,8 @@ export function createUserController(service: IUserService, jwtSecret: string): 
 
   router.post("/user/login", async (req, res) => {
     try {
-      const userLoginData = req.body as UserLoginData;
-      const result = await service.login(userLoginData);
+      const iUserLoginData = req.body as IUserLoginData;
+      const result = await service.login(iUserLoginData);
       res.json(result);
     } catch (e) {
       console.warn(e);

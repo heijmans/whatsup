@@ -15,14 +15,14 @@ paths:
           in: header
           required: true
           schema:
-            $ref: "#/components/schemas/AuthorizationData"
+            $ref: "#/components/schemas/IAuthorizationData"
       responses:
         200:
           description: ""
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/IUser"
   /user/register:
     post:
       summary: register a user
@@ -36,14 +36,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserRegisterData"
+              $ref: "#/components/schemas/IUserRegisterData"
       responses:
         200:
           description: ""
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/IUser"
   /user/login:
     post:
       summary: login
@@ -57,14 +57,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UserLoginData"
+              $ref: "#/components/schemas/IUserLoginData"
       responses:
         200:
           description: success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LoginResult"
+                $ref: "#/components/schemas/ILoginResult"
 
   /chats:
     get:
@@ -79,7 +79,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Chats"
+                $ref: "#/components/schemas/IChats"
     post:
       summary: create a chat
       description: ""
@@ -91,14 +91,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ChatCreateData"
+              $ref: "#/components/schemas/IChatCreateData"
       responses:
         200:
           description: ""
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Chat"
+                $ref: "#/components/schemas/IChat"
   /chats/{id}:
     get:
       summary: get a chat
@@ -120,7 +120,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Chat"
+                $ref: "#/components/schemas/IChat"
     delete:
       summary: delete a chat
       description: ""
@@ -150,7 +150,7 @@ security:
 
 components:
   schemas:
-    AuthorizationData:
+    IAuthorizationData:
       type: object
       properties:
         userId:
@@ -158,7 +158,7 @@ components:
           format: int64
       required:
         - usedId
-    User:
+    IUser:
       type: object
       properties:
         id:
@@ -169,7 +169,7 @@ components:
       required:
         - id
         - username
-    UserRegisterData:
+    IUserRegisterData:
       type: object
       properties:
         username:
@@ -179,7 +179,7 @@ components:
       required:
         - username
         - password
-    UserLoginData:
+    IUserLoginData:
       type: object
       properties:
         username:
@@ -189,7 +189,7 @@ components:
       required:
         - username
         - password
-    LoginResult:
+    ILoginResult:
       type: object
       properties:
         success:
@@ -198,11 +198,11 @@ components:
           type: string
       required:
         - success
-    Chats:
+    IChats:
       type: array
       items:
         $ref: "#/components/schemas/Chat"
-    Chat:
+    IChat:
       type: object
       properties:
         id:
@@ -213,7 +213,7 @@ components:
       required:
         - id
         - name
-    ChatCreateData:
+    IChatCreateData:
       type: object
       properties:
         name:
