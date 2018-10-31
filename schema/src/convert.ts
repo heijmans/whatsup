@@ -142,7 +142,11 @@ function getBodyName(o: RequestBodyObject): string {
   const { content } = o;
   const schema = (content as ContentObject)["application/json"].schema!;
   if (schema.$ref) {
-    return lcfirst(getType(schema));
+    let type = getType(schema);
+    if (type.match(/^I[A-Z]/)) {
+      type = type.substr(1);
+    }
+    return lcfirst(type);
   } else {
     return "body";
   }

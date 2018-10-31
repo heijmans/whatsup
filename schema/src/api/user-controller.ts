@@ -8,8 +8,8 @@ import { IAuthorizationData, ILoginResult, IUser, IUserLoginData, IUserRegisterD
 
 export interface IUserService {
   getUser: (authorization: IAuthorizationData) => Promise<IUser>;
-  registerUser: (iUserRegisterData: IUserRegisterData) => Promise<IUser>;
-  login: (iUserLoginData: IUserLoginData) => Promise<ILoginResult>;
+  registerUser: (userRegisterData: IUserRegisterData) => Promise<IUser>;
+  login: (userLoginData: IUserLoginData) => Promise<ILoginResult>;
 }
 
 export default function createUserController(service: IUserService, jwtSecret: string): Router {
@@ -32,8 +32,8 @@ export default function createUserController(service: IUserService, jwtSecret: s
 
   router.post("/user/register", async (req, res) => {
     try {
-      const iUserRegisterData = req.body as IUserRegisterData;
-      const result = await service.registerUser(iUserRegisterData);
+      const userRegisterData = req.body as IUserRegisterData;
+      const result = await service.registerUser(userRegisterData);
       res.json(result);
     } catch (e) {
       console.warn(e);
@@ -43,8 +43,8 @@ export default function createUserController(service: IUserService, jwtSecret: s
 
   router.post("/user/login", async (req, res) => {
     try {
-      const iUserLoginData = req.body as IUserLoginData;
-      const result = await service.login(iUserLoginData);
+      const userLoginData = req.body as IUserLoginData;
+      const result = await service.login(userLoginData);
       res.json(result);
     } catch (e) {
       console.warn(e);
