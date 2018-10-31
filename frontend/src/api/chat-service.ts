@@ -40,6 +40,7 @@ const chatService = {
     checkResponse(response);
     await response.json();
   },
+
 };
 
 export default chatService;
