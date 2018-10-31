@@ -283,6 +283,7 @@ function generateControllerFn(tag: string, operations: IOperationInfo[]): string
       content += `      res.json(result);\n`;
     } else {
       content += `      ${call};\n`;
+      content += `      res.json({ success: true });\n`;
     }
 
     content += `    } catch (e) {\n`;

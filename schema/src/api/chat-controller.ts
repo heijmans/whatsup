@@ -72,6 +72,7 @@ export default function createChatController(service: IChatService, jwtSecret: s
       }
       const id = parseInt(req.params.id as string, 10);
       await service.deleteChat(id);
+      res.json({ success: true });
     } catch (e) {
       console.warn(e);
       res.status(500).send(e.toString());
