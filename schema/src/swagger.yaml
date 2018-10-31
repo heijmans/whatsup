@@ -210,6 +210,9 @@ components:
           format: int64
         name:
           type: string
+        unread:
+          type: integer
+          format: int64
       required:
         - id
         - name

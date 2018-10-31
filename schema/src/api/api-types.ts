@@ -31,6 +31,7 @@ export type IChats = Array<IChat>;
 export interface IChat {
   id: number;
   name: string;
+  unread?: number;
 }
 
 export interface IChatCreateData {
