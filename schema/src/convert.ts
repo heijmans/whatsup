@@ -325,8 +325,70 @@ function generateControllers(): void {
   });
 }
 
+function hasBody(operations: IOperationInfo[]): boolean {
+  return !!operations.find((o) => !!o.operation.requestBody);
+}
+
+function generateServiceImports(operations: IOperationInfo[]): string {
+  const hasSec = hasSecurity(operations);
+
+  const names = ["checkResponse"];
+  if (hasBody) {
+    names.push("jsonBody");
+  }
+  if (hasSec) {
+    names.push("jwtHeaders");
+  }
+  let content = `import { ${names.join(", ")} } from "../lib/api-service-helpers";\n`;
+
+  const typeSet = new Set<string>();
+  operations.forEach((operInfo) => {
+    const { operation } = operInfo;
+    const { requestBody, parameters } = operation;
+    if (parameters) {
+      parameters.forEach((x) => {
+        const parameter = x as ParameterObject;
+        if (parameter.name === "authorization" && parameter.in === "header") {
+          return;
+        }
+        typeSet.add(getType(parameter.schema!));
+      });
+    }
+    if (requestBody) {
+      typeSet.add(getContentType(requestBody as RequestBodyObject));
+    }
+    const okResponse = operation.responses && operation.responses["200"];
+    if (okResponse && okResponse.content) {
+      typeSet.add(getContentType(okResponse));
+    }
+  });
+  const types = [...typeSet];
+  types.sort();
+  const importTypes = types.filter((x) => customTypes.indexOf(x) >= 0);
+  content += `import { ${importTypes.join(", ")} } from "./api-types";\n\n`;
+  return content;
+}
+
+function generateService(tag: string): void {
+  let content = GEN_COMMENT;
+  content += "// tslint:disable: array-type\n\n";
+
+  const operations = getOperationsByTag(tag);
+  content += generateServiceImports(operations);
+  // content += generateServiceObject(tag, operations);
+
+  write(`${tag}-service.ts`, content);
+}
+
+function generateServices(): void {
+  oao.tags!.forEach((tag) => {
+    generateService(tag.name);
+  });
+}
+
 if (!fs.existsSync(GEN_ROOT)) {
   fs.mkdirSync(GEN_ROOT);
 }
 generateTypes();
 generateControllers();
+generateServices();
