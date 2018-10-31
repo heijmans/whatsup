@@ -23,7 +23,7 @@ export interface IUserLoginData {
 
 export interface ILoginResult {
   success: boolean;
-  token: string;
+  token?: string;
 }
 
 export type IChats = Array<IChat>;

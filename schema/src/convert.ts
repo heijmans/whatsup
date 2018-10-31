@@ -69,9 +69,11 @@ function getType(o: SchemaObject | ReferenceObject): string {
 }
 
 function makeInterface(name: string, schema: SchemaObject): string {
+  const required = new Set<string>(schema.required || []);
   let res = `export interface ${name} {\n`;
   each(schema.properties!, (prop, propName) => {
-    res += `  ${propName}: ${getType(prop)};\n`;
+    const qm = required.has(propName) ? "" : "?";
+    res += `  ${propName}${qm}: ${getType(prop)};\n`;
   });
   res += `}\n\n`;
   customTypes.push(name);
