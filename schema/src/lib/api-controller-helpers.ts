@@ -14,5 +14,5 @@ export function getAuthorization<T>(req: Request, jwtSecret: string): T | undefi
   if (!result) {
     return undefined;
   }
-  return result as any as T;
+  return (result as any) as T;
 }

@@ -153,7 +153,7 @@ function generateImports(operations: IOperationInfo[]): string {
 
   let content = `import express, { Router } from "express";\n`;
   if (hasSec) {
-    content += "import { getAuthorization } from \"../lib/api-controller-helpers\";\n";
+    content += 'import { getAuthorization } from "../lib/api-controller-helpers";\n';
   }
 
   const typeSet = new Set<string>();
@@ -228,9 +228,10 @@ function generateControllerFn(tag: string, operations: IOperationInfo[]): string
     content += `    try {\n`;
 
     if (!operation.security) {
-      content += "      const authorization = getAuthorization<AuthorizationData>(req, jwtSecret);\n";
+      content +=
+        "      const authorization = getAuthorization<AuthorizationData>(req, jwtSecret);\n";
       content += "      if (!authorization) {\n";
-      content += "        res.status(403).send(\"forbidden\");\n";
+      content += '        res.status(403).send("forbidden");\n';
       content += "        return;\n";
       content += "      }\n";
     }
