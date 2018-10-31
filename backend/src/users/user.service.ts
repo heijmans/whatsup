@@ -2,9 +2,9 @@ import jwt from "jsonwebtoken";
 import secrets from "../../config/secrets";
 import {
   IAuthorizationData,
-  ILoginResult,
   IUser,
   IUserLoginData,
+  IUserLoginResult,
   IUserRegisterData,
 } from "../api/api-types";
 import User from "./user.model";
@@ -26,7 +26,7 @@ const userService = {
     return toIUser(await User.create(data));
   },
 
-  async login({ username, password }: IUserLoginData): Promise<ILoginResult> {
+  async login({ username, password }: IUserLoginData): Promise<IUserLoginResult> {
     const user = await User.login(username, password);
     if (user) {
       const token = jwt.sign({ userId: user.id }, secrets.jwt);
