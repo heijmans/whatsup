@@ -7,8 +7,8 @@ import { LoginResult, User, UserLogin, UserRegister } from "./api-types";
 
 export interface IUserService {
   getUser: (authorization: string) => Promise<User>;
-  registerUser: (body: UserRegister) => Promise<User>;
-  login: (body: UserLogin) => Promise<LoginResult>;
+  registerUser: (userRegister: UserRegister) => Promise<User>;
+  login: (userLogin: UserLogin) => Promise<LoginResult>;
 }
 
 export function createUserController(service: IUserService): Router {
@@ -27,8 +27,8 @@ export function createUserController(service: IUserService): Router {
 
   router.post("/user/register", async (req, res) => {
     try {
-      const body = req.body as UserRegister;
-      const result = await service.registerUser(body);
+      const userRegister = req.body as UserRegister;
+      const result = await service.registerUser(userRegister);
       res.json(result);
     } catch (e) {
       console.warn(e);
@@ -38,8 +38,8 @@ export function createUserController(service: IUserService): Router {
 
   router.post("/user/login", async (req, res) => {
     try {
-      const body = req.body as UserLogin;
-      const result = await service.login(body);
+      const userLogin = req.body as UserLogin;
+      const result = await service.login(userLogin);
       res.json(result);
     } catch (e) {
       console.warn(e);

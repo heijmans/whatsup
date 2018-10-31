@@ -7,7 +7,7 @@ import { Chat, ChatCreate, Chats } from "./api-types";
 
 export interface IChatService {
   listChats: () => Promise<Chats>;
-  createChat: (body: ChatCreate) => Promise<Chat>;
+  createChat: (chatCreate: ChatCreate) => Promise<Chat>;
   getChat: (id: number) => Promise<Chat>;
   deleteChat: (id: number) => Promise<void>;
 }
@@ -27,8 +27,8 @@ export function createChatController(service: IChatService): Router {
 
   router.post("/chats", async (req, res) => {
     try {
-      const body = req.body as ChatCreate;
-      const result = await service.createChat(body);
+      const chatCreate = req.body as ChatCreate;
+      const result = await service.createChat(chatCreate);
       res.json(result);
     } catch (e) {
       console.warn(e);

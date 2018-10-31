@@ -33,6 +33,10 @@ function ucfirst(s: string): string {
   return s[0].toUpperCase() + s.substr(1);
 }
 
+function lcfirst(s: string): string {
+  return s[0].toLowerCase() + s.substr(1);
+}
+
 function each<V>(map: { [key: string]: V }, fn: (value: V, key: string) => void): void {
   Object.keys(map).forEach((key) => {
     const value = map[key];
@@ -125,6 +129,16 @@ function getContentType(o: RequestBodyObject | ResponseObject): string {
   return getType(schema);
 }
 
+function getBodyName(o: RequestBodyObject): string {
+  const { content } = o;
+  const schema = (content as ContentObject)["application/json"].schema!;
+  if (schema.$ref) {
+    return lcfirst(getType(schema));
+  } else {
+    return "body";
+  }
+}
+
 function generateImports(operations: IOperationInfo[]): string {
   const typeSet = new Set<string>();
   operations.forEach((operInfo) => {
@@ -164,7 +178,9 @@ function generateServiceInterface(tag: string, operations: IOperationInfo[]): st
       });
     }
     if (requestBody) {
-      paramTypes.push(`body: ${getContentType(requestBody as RequestBodyObject)}`);
+      const bodyName = getBodyName(requestBody as RequestBodyObject);
+      const bodyType = getContentType(requestBody as RequestBodyObject);
+      paramTypes.push(`${bodyName}: ${bodyType}`);
     }
     let resultType = "void";
     const okResponse = operation.responses && operation.responses["200"];
@@ -219,9 +235,10 @@ function generateControllerFn(tag: string, operations: IOperationInfo[]): string
       });
     }
     if (requestBody) {
+      const bodyName = getBodyName(requestBody as RequestBodyObject);
       const bodyType = getContentType(requestBody as RequestBodyObject);
-      content += `      const body = req.body as ${bodyType};\n`;
-      params.push("body");
+      content += `      const ${bodyName} = req.body as ${bodyType};\n`;
+      params.push(bodyName);
     }
     const call = `await service.${operationId}(${params.join(", ")})`;
     const okResponse = operation.responses && operation.responses["200"];
