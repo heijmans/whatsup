@@ -25,8 +25,13 @@ const GEN_COMMENT = "// auto generated, do not edit\n\n";
 const oao: OpenAPIObject = yaml.safeLoad(fs.readFileSync("src/swagger.yaml", "utf8"));
 const customTypes: string[] = [];
 
-function clean(s: string): string {
-  return s.replace(/\n\n\n+/, "\n\n").replace(/\n+$/, "\n");
+function write(path: string, content: string): void {
+  path = `${GEN_ROOT}/${path}`;
+  content = content.replace(/\n\n\n+/, "\n\n").replace(/\n+$/, "\n");
+  const oldContent = fs.readFileSync(path, "utf8");
+  if (content !== oldContent) {
+    fs.writeFileSync(path, content);
+  }
 }
 
 function ucfirst(s: string): string {
@@ -91,7 +96,7 @@ function generateTypes(): void {
     }
   });
 
-  fs.writeFileSync(`${GEN_ROOT}/api-types.ts`, clean(content));
+  write("api-types.ts", content);
 }
 
 interface IOperationInfo {
@@ -270,7 +275,7 @@ function generateController(tag: string): void {
   content += generateServiceInterface(tag, operations);
   content += generateControllerFn(tag, operations);
 
-  fs.writeFileSync(`${GEN_ROOT}/${tag}-controller.ts`, clean(content));
+  write(`${tag}-controller.ts`, content);
 }
 
 function generateControllers(): void {
@@ -305,7 +310,7 @@ function findOpenPaths(): void {
   let content = GEN_COMMENT;
   content += `const openPaths = ${JSON.stringify(paths).replace(",", ", ")};\n`;
   content += `export default openPaths;\n`;
-  fs.writeFileSync(`${GEN_ROOT}/api-open-paths.ts`, content);
+  write("api-open-paths.ts", content);
 }
 
 if (!fs.existsSync(GEN_ROOT)) {
