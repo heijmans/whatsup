@@ -27,7 +27,7 @@ const customTypes: string[] = [];
 function write(path: string, content: string): void {
   path = `${GEN_ROOT}/${path}`;
   content = content.replace(/\n\n\n+/, "\n\n").replace(/\n+$/, "\n");
-  const oldContent = fs.readFileSync(path, "utf8");
+  const oldContent = fs.existsSync(path) ? fs.readFileSync(path, "utf8") : undefined;
   if (content !== oldContent) {
     fs.writeFileSync(path, content);
   }
