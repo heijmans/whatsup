@@ -311,38 +311,8 @@ function generateControllers(): void {
   });
 }
 
-function findOpenPaths(): void {
-  const openSet = new Set<string>();
-  const closeSet = new Set<string>();
-  oao.tags!.forEach((tag) => {
-    const operations = getOperationsByTag(tag.name);
-    operations.forEach((operInfo) => {
-      const { path, operation } = operInfo;
-      const isOpen = !!operation.security && operation.security.length === 0;
-      if (isOpen) {
-        openSet.add(path);
-      } else {
-        closeSet.add(path);
-      }
-    });
-  });
-
-  const both = [...openSet].filter((p) => closeSet.has(p));
-  if (both.length !== 0) {
-    throw new Error("both open and closed: " + both.join(", "));
-  }
-
-  const paths = [...openSet];
-  paths.sort();
-  let content = GEN_COMMENT;
-  content += `const openPaths = ${JSON.stringify(paths).replace(",", ", ")};\n`;
-  content += `export default openPaths;\n`;
-  write("api-open-paths.ts", content);
-}
-
 if (!fs.existsSync(GEN_ROOT)) {
   fs.mkdirSync(GEN_ROOT);
 }
 generateTypes();
 generateControllers();
-findOpenPaths();
