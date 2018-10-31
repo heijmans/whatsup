@@ -241,6 +241,10 @@ function generateControllerFn(tag: string, operations: IOperationInfo[]): string
       parameters.forEach((x) => {
         const parameter = x as ParameterObject;
         const { name: paramName, in: paramIn, schema } = parameter;
+        params.push(paramName);
+        if (paramName === "authorization" && paramIn === "header") {
+          return;
+        }
         const type = (schema! as SchemaObject).type;
         const from =
           paramIn === "path"
@@ -261,7 +265,6 @@ function generateControllerFn(tag: string, operations: IOperationInfo[]): string
         } else {
           throw new Error("param type must be integer or string");
         }
-        params.push(paramName);
       });
     }
     if (requestBody) {

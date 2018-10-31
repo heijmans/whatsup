@@ -15,7 +15,7 @@ paths:
           in: header
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/AuthorizationData"
       responses:
         200:
           description: ""

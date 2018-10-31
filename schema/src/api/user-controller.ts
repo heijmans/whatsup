@@ -7,7 +7,7 @@ import { getAuthorization } from "../lib/api-controller-helpers";
 import { AuthorizationData, LoginResult, User, UserLoginData, UserRegisterData } from "./api-types";
 
 export interface IUserService {
-  getUser: (authorization: string) => Promise<User>;
+  getUser: (authorization: AuthorizationData) => Promise<User>;
   registerUser: (userRegisterData: UserRegisterData) => Promise<User>;
   login: (userLoginData: UserLoginData) => Promise<LoginResult>;
 }
@@ -22,7 +22,6 @@ export function createUserController(service: IUserService, jwtSecret: string): 
         res.status(403).send("forbidden");
         return;
       }
-      const authorization = req.headers.authorization as string;
       const result = await service.getUser(authorization);
       res.json(result);
     } catch (e) {
