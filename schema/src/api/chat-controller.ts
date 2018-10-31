@@ -3,11 +3,11 @@
 // tslint:disable: array-type
 
 import express, { Router } from "express";
-import { Chat, ChatCreate, Chats } from "./api-types";
+import { Chat, ChatCreateData, Chats } from "./api-types";
 
 export interface IChatService {
   listChats: () => Promise<Chats>;
-  createChat: (chatCreate: ChatCreate) => Promise<Chat>;
+  createChat: (chatCreateData: ChatCreateData) => Promise<Chat>;
   getChat: (id: number) => Promise<Chat>;
   deleteChat: (id: number) => Promise<void>;
 }
@@ -27,8 +27,8 @@ export function createChatController(service: IChatService): Router {
 
   router.post("/chats", async (req, res) => {
     try {
-      const chatCreate = req.body as ChatCreate;
-      const result = await service.createChat(chatCreate);
+      const chatCreateData = req.body as ChatCreateData;
+      const result = await service.createChat(chatCreateData);
       res.json(result);
     } catch (e) {
       console.warn(e);

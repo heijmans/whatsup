@@ -3,12 +3,12 @@
 // tslint:disable: array-type
 
 import express, { Router } from "express";
-import { LoginResult, User, UserLogin, UserRegister } from "./api-types";
+import { LoginResult, User, UserLoginData, UserRegisterData } from "./api-types";
 
 export interface IUserService {
   getUser: (authorization: string) => Promise<User>;
-  registerUser: (userRegister: UserRegister) => Promise<User>;
-  login: (userLogin: UserLogin) => Promise<LoginResult>;
+  registerUser: (userRegisterData: UserRegisterData) => Promise<User>;
+  login: (userLoginData: UserLoginData) => Promise<LoginResult>;
 }
 
 export function createUserController(service: IUserService): Router {
@@ -27,8 +27,8 @@ export function createUserController(service: IUserService): Router {
 
   router.post("/user/register", async (req, res) => {
     try {
-      const userRegister = req.body as UserRegister;
-      const result = await service.registerUser(userRegister);
+      const userRegisterData = req.body as UserRegisterData;
+      const result = await service.registerUser(userRegisterData);
       res.json(result);
     } catch (e) {
       console.warn(e);
@@ -38,8 +38,8 @@ export function createUserController(service: IUserService): Router {
 
   router.post("/user/login", async (req, res) => {
     try {
-      const userLogin = req.body as UserLogin;
-      const result = await service.login(userLogin);
+      const userLoginData = req.body as UserLoginData;
+      const result = await service.login(userLoginData);
       res.json(result);
     } catch (e) {
       console.warn(e);

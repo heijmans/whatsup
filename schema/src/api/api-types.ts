@@ -7,12 +7,12 @@ export interface User {
   username: string;
 }
 
-export interface UserRegister {
+export interface UserRegisterData {
   username: string;
   password: string;
 }
 
-export interface UserLogin {
+export interface UserLoginData {
   username: string;
   password: string;
 }
@@ -29,6 +29,6 @@ export interface Chat {
   name: string;
 }
 
-export interface ChatCreate {
+export interface ChatCreateData {
   name: string;
 }
