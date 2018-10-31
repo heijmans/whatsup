@@ -1,8 +1,8 @@
+import userService from "../api/user-service";
 import { SimpleThunkAction } from "../lib/types";
 import { connect, disconnect, fetchChats } from "./chat.actions";
 import { getTokenOrThrow } from "./selectors";
 import { IState, IUser } from "./state";
-import userService from "./user.service";
 
 // get user
 
@@ -31,7 +31,7 @@ export function fetchUser(): SimpleThunkAction<IState> {
   return async (dispatch, getState) => {
     const token = getTokenOrThrow(getState());
     dispatch(requestUser());
-    const user = await userService.get(token);
+    const user = await userService.getUser(token);
     dispatch(receiveUser(user));
   };
 }
@@ -64,7 +64,7 @@ export function receiveRegisterUser(data: IUser): IReceiveRegisterUser {
 export function registerUser(username: string, password: string): SimpleThunkAction<IState> {
   return async (dispatch) => {
     dispatch(requestRegisterUser(username, password));
-    const user = await userService.register(username, password);
+    const user = await userService.registerUser({ username, password });
     dispatch(receiveRegisterUser(user));
     dispatch(loginUser(username, password));
   };
@@ -98,11 +98,13 @@ export function receiveLoginUser(token: string): IReceiveLoginUser {
 export function loginUser(username: string, password: string): SimpleThunkAction<IState> {
   return async (dispatch) => {
     dispatch(requestLoginUser(username, password));
-    const token = await userService.login(username, password);
-    dispatch(receiveLoginUser(token));
-    dispatch(fetchUser());
-    dispatch(fetchChats());
-    dispatch(connect());
+    const result = await userService.login({ username, password });
+    if (result.success) {
+      dispatch(receiveLoginUser(result.token!));
+      dispatch(fetchUser());
+      dispatch(fetchChats());
+      dispatch(connect());
+    }
   };
 }
 

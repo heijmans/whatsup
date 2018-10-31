@@ -1,8 +1,9 @@
+import chatService from "../api/chat-service";
 import { SimpleThunkAction } from "../lib/types";
 import { AppAction } from "./actions";
-import chatService from "./chat.service";
 import { getTokenOrThrow } from "./selectors";
 import { IChat, IState } from "./state";
+import wsService from "./ws.service";
 
 // get chats
 
@@ -31,7 +32,7 @@ export function fetchChats(): SimpleThunkAction<IState> {
   return async (dispatch, getState) => {
     const token = getTokenOrThrow(getState());
     dispatch(requestChats());
-    const chats = await chatService.all(token);
+    const chats = await chatService.listChats(token);
     dispatch(receiveChats(chats));
   };
 }
@@ -64,7 +65,7 @@ export function createChat(name: string): SimpleThunkAction<IState> {
   return async (dispatch, getState) => {
     const token = getTokenOrThrow(getState());
     dispatch(requestCreateChat(name));
-    const chat = await chatService.create(token, name);
+    const chat = await chatService.createChat(token, { name });
     dispatch(receiveCreateChat(chat));
     dispatch(refresh());
   };
@@ -98,7 +99,7 @@ export function deleteChat(id: number): SimpleThunkAction<IState> {
   return async (dispatch, getState) => {
     const token = getTokenOrThrow(getState());
     dispatch(requestDeleteChat(id));
-    await chatService.delete(token, id);
+    await chatService.deleteChat(token, id);
     dispatch(receiveDeleteChat(id));
     dispatch(refresh());
   };
@@ -149,7 +150,7 @@ export function connect(): SimpleThunkAction<IState> {
       ws = undefined;
     }
     const token = getTokenOrThrow(getState());
-    ws = await chatService.connect(token);
+    ws = await wsService.connect(token);
     dispatch(connected());
 
     ws.addEventListener("message", (event) => {
@@ -172,7 +173,7 @@ export function sendMessage(chatId: number, content: string): SimpleThunkAction<
   return (dispatch) => {
     if (ws) {
       const message = messageAction(chatId, content);
-      chatService.sendAction(ws, message);
+      wsService.sendAction(ws, message);
       dispatch(message);
     } else {
       throw new Error("websocket closed, could not send message");
@@ -195,7 +196,7 @@ export function refresh(): SimpleThunkAction<IState> {
     dispatch(fetchChats());
 
     if (ws) {
-      chatService.sendAction(ws, refreshAction());
+      wsService.sendAction(ws, refreshAction());
     } else {
       throw new Error("websocket closed, could not send message");
     }
