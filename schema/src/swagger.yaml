@@ -150,6 +150,14 @@ security:
 
 components:
   schemas:
+    AuthorizationData:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+      required:
+        - usedId
     User:
       type: object
       properties:

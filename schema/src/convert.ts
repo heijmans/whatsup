@@ -109,6 +109,10 @@ function operationHasTag(operation: OperationObject | undefined, tag: string): b
   return !!operation && !!operation.tags && operation.tags.indexOf(tag) >= 0;
 }
 
+function hasSecurity(operations: IOperationInfo[]): boolean {
+  return !!operations.find((o) => !o.operation.security);
+}
+
 function getOperationsByTag(tag: string): IOperationInfo[] {
   const res: IOperationInfo[] = [];
   each(oao.paths, (pathObject: PathItemObject, path) => {
@@ -145,7 +149,17 @@ function getBodyName(o: RequestBodyObject): string {
 }
 
 function generateImports(operations: IOperationInfo[]): string {
+  const hasSec = hasSecurity(operations);
+
+  let content = `import express, { Router } from "express";\n`;
+  if (hasSec) {
+    content += "import { getAuthorization } from \"../lib/api-controller-helpers\";\n";
+  }
+
   const typeSet = new Set<string>();
+  if (hasSec) {
+    typeSet.add("AuthorizationData");
+  }
   operations.forEach((operInfo) => {
     const { operation } = operInfo;
     const { requestBody, parameters } = operation;
@@ -165,7 +179,8 @@ function generateImports(operations: IOperationInfo[]): string {
   const types = [...typeSet];
   types.sort();
   const importTypes = types.filter((x) => customTypes.indexOf(x) >= 0);
-  return `import { ${importTypes.join(", ")} } from "./api-types";\n\n`;
+  content += `import { ${importTypes.join(", ")} } from "./api-types";\n\n`;
+  return content;
 }
 
 function generateServiceInterface(tag: string, operations: IOperationInfo[]): string {
@@ -200,7 +215,8 @@ function generateServiceInterface(tag: string, operations: IOperationInfo[]): st
 
 function generateControllerFn(tag: string, operations: IOperationInfo[]): string {
   const name = ucfirst(tag);
-  let content = `export function create${name}Controller(service: I${name}Service): Router {\n`;
+  const jwtParam = hasSecurity(operations) ? ", jwtSecret: string" : "";
+  let content = `export function create${name}Controller(service: I${name}Service${jwtParam}): Router {\n`;
   content += `  const router = express.Router();\n\n`;
   operations.forEach((operInfo) => {
     const { method, path, operation } = operInfo;
@@ -210,6 +226,14 @@ function generateControllerFn(tag: string, operations: IOperationInfo[]): string
       expressPath,
     )}, async (req, res) => {\n`;
     content += `    try {\n`;
+
+    if (!operation.security) {
+      content += "      const authorization = getAuthorization<AuthorizationData>(req, jwtSecret);\n";
+      content += "      if (!authorization) {\n";
+      content += "        res.status(403).send(\"forbidden\");\n";
+      content += "        return;\n";
+      content += "      }\n";
+    }
 
     const params: string[] = [];
     if (parameters) {
@@ -268,7 +292,6 @@ function generateControllerFn(tag: string, operations: IOperationInfo[]): string
 function generateController(tag: string): void {
   let content = GEN_COMMENT;
   content += "// tslint:disable: array-type\n\n";
-  content += `import express, { Router } from "express";\n`;
 
   const operations = getOperationsByTag(tag);
   content += generateImports(operations);

@@ -5,7 +5,9 @@
   "private": true,
   "dependencies": {
     "@types/express": "^4.16.0",
-    "express": "^4.16.4"
+    "@types/jsonwebtoken": "^7.2.8",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.3.0"
   },
   "devDependencies": {
     "@types/js-yaml": "^3.11.2",

@@ -2,6 +2,10 @@
 
 // tslint:disable: array-type interface-name
 
+export interface AuthorizationData {
+  userId: number;
+}
+
 export interface User {
   id: number;
   username: string;
