@@ -1,6 +1,12 @@
 import jwt from "jsonwebtoken";
 import secrets from "../../config/secrets";
-import { IAuthorizationData, ILoginResult, IUser, IUserLoginData, IUserRegisterData } from "../api/api-types";
+import {
+  IAuthorizationData,
+  ILoginResult,
+  IUser,
+  IUserLoginData,
+  IUserRegisterData,
+} from "../api/api-types";
 import User from "./user.model";
 
 function toIUser({ id, username }: User): IUser {
@@ -29,7 +35,6 @@ const userService = {
       return { success: false };
     }
   },
-
 };
 
 export default userService;
