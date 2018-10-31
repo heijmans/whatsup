@@ -199,7 +199,7 @@ function generateServiceInterface(tag: string, operations: IOperationInfo[]): st
     if (parameters) {
       parameters.forEach((x) => {
         const parameter = x as ParameterObject;
-        if (! parameter.required) {
+        if (!parameter.required) {
           throw new Error("cannot handle optional parameters");
         }
         const type = getType(parameter.schema!);
