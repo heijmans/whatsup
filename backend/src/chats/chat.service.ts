@@ -15,7 +15,7 @@ async function getChat(id: number): Promise<Chat> {
 
 const chatService = {
   async listChats(): Promise<IChats> {
-    return await Chat.findAll({ order: [["name"]] }).map(toIChat);
+    return (await Chat.findAll({ order: [["name"]] })).map(toIChat);
   },
 
   async createChat(data: IChatCreateData): Promise<IChat> {
