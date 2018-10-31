@@ -19,6 +19,9 @@ import {
   SchemaObject,
 } from "openapi3-ts";
 
+const GEN_ROOT = "src/api";
+const GEN_COMMENT = "// auto generated, do not edit\n\n";
+
 const oao: OpenAPIObject = yaml.safeLoad(fs.readFileSync("src/swagger.yaml", "utf8"));
 const customTypes: string[] = [];
 
@@ -73,7 +76,7 @@ function makeTypeDef(name: string, schema: SchemaObject): string {
 }
 
 function generateTypes(): void {
-  let content = "// auto generated, do not edit\n\n";
+  let content = GEN_COMMENT;
   content += "// tslint:disable: array-type interface-name\n\n";
   each(oao.components!.schemas!, (schema, schemaKey) => {
     const { type } = schema;
@@ -84,7 +87,7 @@ function generateTypes(): void {
     }
   });
 
-  fs.writeFileSync("generated/api-types.ts", clean(content));
+  fs.writeFileSync(`${GEN_ROOT}/api-types.ts`, clean(content));
 }
 
 interface IOperationInfo {
@@ -122,25 +125,18 @@ function getContentType(o: RequestBodyObject | ResponseObject): string {
   return getType(schema);
 }
 
-function generateController(tag: string): void {
-  const name = ucfirst(tag);
-
-  let content = "// auto generated, do not edit\n\n";
-  content += "// tslint:disable: array-type\n\n";
-  content += `import express, { Router } from "express";\n`;
-
-  const operations = getOperationsByTag(tag);
-
+function generateImports(operations: IOperationInfo[]): string {
   const typeSet = new Set<string>();
   operations.forEach((operInfo) => {
     const { operation } = operInfo;
     const { requestBody, parameters } = operation;
-    if (requestBody) {
-      typeSet.add(getContentType(requestBody as RequestBodyObject));
-    } else if (parameters) {
+    if (parameters) {
       parameters.forEach((parameter) => {
         typeSet.add(getType((parameter as ParameterObject).schema!));
       });
+    }
+    if (requestBody) {
+      typeSet.add(getContentType(requestBody as RequestBodyObject));
     }
     const okResponse = operation.responses && operation.responses["200"];
     if (okResponse && okResponse.content) {
@@ -150,10 +146,12 @@ function generateController(tag: string): void {
   const types = [...typeSet];
   types.sort();
   const importTypes = types.filter((x) => customTypes.indexOf(x) >= 0);
-  content += `import { ${importTypes.join(", ")} } from "./api-types";\n\n`;
+  return `import { ${importTypes.join(", ")} } from "./api-types";\n\n`;
+}
 
-  const service = `I${name}Service`;
-  content += `export interface ${service} {\n`;
+function generateServiceInterface(tag: string, operations: IOperationInfo[]): string {
+  const service = `I${ucfirst(tag)}Service`;
+  let content = `export interface ${service} {\n`;
   operations.forEach((operInfo) => {
     const { operation } = operInfo;
     const { operationId, requestBody, parameters } = operation;
@@ -175,8 +173,12 @@ function generateController(tag: string): void {
     content += `  ${operationId}: (${paramTypes.join(", ")}) => Promise<${resultType}>;\n`;
   });
   content += `}\n\n`;
+  return content;
+}
 
-  content += `export function create${name}Controller(service: I${name}Service): Router {\n`;
+function generateControllerFn(tag: string, operations: IOperationInfo[]): string {
+  const name = ucfirst(tag);
+  let content = `export function create${name}Controller(service: I${name}Service): Router {\n`;
   content += `  const router = express.Router();\n\n`;
   operations.forEach((operInfo) => {
     const { method, path, operation } = operInfo;
@@ -236,8 +238,21 @@ function generateController(tag: string): void {
   });
   content += `  return router;\n`;
   content += `}\n\n`;
+  return content;
+}
 
-  fs.writeFileSync(`generated/${tag}-controller.ts`, clean(content));
+function generateController(tag: string): void {
+  let content = GEN_COMMENT;
+  content += "// tslint:disable: array-type\n\n";
+  content += `import express, { Router } from "express";\n`;
+
+  const operations = getOperationsByTag(tag);
+
+  content += generateImports(operations);
+  content += generateServiceInterface(tag, operations);
+  content += generateControllerFn(tag, operations);
+
+  fs.writeFileSync(`${GEN_ROOT}/${tag}-controller.ts`, clean(content));
 }
 
 function generateControllers(): void {
@@ -269,14 +284,14 @@ function findOpenPaths(): void {
 
   const paths = [...openSet];
   paths.sort();
-  let content = "// auto generated, do not edit\n\n";
+  let content = GEN_COMMENT;
   content += `const openPaths = ${JSON.stringify(paths).replace(",", ", ")};\n`;
   content += `export default openPaths;\n`;
-  fs.writeFileSync("generated/api-open-paths.ts", content);
+  fs.writeFileSync(`${GEN_ROOT}/api-open-paths.ts`, content);
 }
 
-if (!fs.existsSync("generated")) {
-  fs.mkdirSync("generated");
+if (!fs.existsSync(GEN_ROOT)) {
+  fs.mkdirSync(GEN_ROOT);
 }
 generateTypes();
 generateControllers();
