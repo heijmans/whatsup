@@ -7,7 +7,6 @@ basepath
 import fs from "fs";
 import yaml from "js-yaml";
 import {
-  ContentObject,
   OpenAPIObject,
   OperationObject,
   ParameterObject,
@@ -50,11 +49,11 @@ function each<V>(map: { [key: string]: V }, fn: (value: V, key: string) => void)
 }
 
 function getType(o: SchemaObject | ReferenceObject): string {
-  if (o.$ref) {
-    const parts = (o.$ref as string).split("/");
+  if ("$ref" in o) {
+    const parts = o.$ref.split("/");
     return parts[parts.length - 1];
   } else {
-    const schema = o as SchemaObject;
+    const schema = o;
     const { type } = schema;
     if (type === "integer" || type === "number") {
       return "number";
@@ -135,13 +134,13 @@ function getOperationsByTag(tag: string): IOperationInfo[] {
 
 function getContentType(o: RequestBodyObject | ResponseObject): string {
   const { content } = o;
-  const schema = (content as ContentObject)["application/json"].schema!;
+  const schema = content!["application/json"].schema!;
   return getType(schema);
 }
 
 function getBodyName(o: RequestBodyObject): string {
   const { content } = o;
-  const schema = (content as ContentObject)["application/json"].schema!;
+  const schema = content["application/json"].schema!;
   if (schema.$ref) {
     let type = getType(schema);
     if (type.match(/^I[A-Z]/)) {
