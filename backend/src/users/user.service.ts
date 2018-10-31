@@ -27,7 +27,7 @@ const userService = {
       const token = jwt.sign(authorization, secrets.jwt);
       return { success: true, token };
     } else {
-      return { success: false, token: "" }; // TODO
+      return { success: false };
     }
   },
 
