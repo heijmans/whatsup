@@ -8,23 +8,22 @@ function toIUser({ id, username }: User): IUser {
 }
 
 const userService = {
-  async getUser(authorization: IAuthorizationData): Promise<IUser> {
-    const user = await User.findById(authorization.userId);
+  async getUser({ userId }: IAuthorizationData): Promise<IUser> {
+    const user = await User.findById(userId);
     if (!user) {
       throw new Error("not found");
     }
     return toIUser(user);
   },
 
-  async registerUser(userRegisterData: IUserRegisterData): Promise<IUser> {
-    return toIUser(await User.create(userRegisterData));
+  async registerUser(data: IUserRegisterData): Promise<IUser> {
+    return toIUser(await User.create(data));
   },
 
   async login({ username, password }: IUserLoginData): Promise<ILoginResult> {
     const user = await User.login(username, password);
     if (user) {
-      const authorization = { userId: user.id };
-      const token = jwt.sign(authorization, secrets.jwt);
+      const token = jwt.sign({ userId: user.id }, secrets.jwt);
       return { success: true, token };
     } else {
       return { success: false };
