@@ -22,7 +22,7 @@ const GEN_COMMENT = "// auto generated from openapi/swagger schema, do not edit\
 const SERVICE_BASE = "/api";
 
 const oao: OpenAPIObject = yaml.safeLoad(fs.readFileSync("src/swagger.yaml", "utf8"));
-const customTypes: string[] = [];
+const customTypes = new Set<string>();
 
 function write(path: string, content: string): void {
   path = `${GEN_ROOT}/${path}`;
@@ -76,12 +76,12 @@ function makeInterface(name: string, schema: SchemaObject): string {
     res += `  ${propName}${qm}: ${getType(prop)};\n`;
   });
   res += `}\n\n`;
-  customTypes.push(name);
+  customTypes.add(name);
   return res;
 }
 
 function makeTypeDef(name: string, schema: SchemaObject): string {
-  customTypes.push(name);
+  customTypes.add(name);
   return `export type ${name} = ${getType(schema)};\n\n`;
 }
 
@@ -182,7 +182,7 @@ function generateImports(operations: IOperationInfo[]): string {
   });
   const types = [...typeSet];
   types.sort();
-  const importTypes = types.filter((x) => customTypes.indexOf(x) >= 0);
+  const importTypes = types.filter((x) => customTypes.has(x));
   content += `import { ${importTypes.join(", ")} } from "./api-types";\n\n`;
   return content;
 }
@@ -362,7 +362,7 @@ function generateServiceImports(operations: IOperationInfo[]): string {
   });
   const types = [...typeSet];
   types.sort();
-  const importTypes = types.filter((x) => customTypes.indexOf(x) >= 0);
+  const importTypes = types.filter((x) => customTypes.has(x));
   content += `import { ${importTypes.join(", ")} } from "./api-types";\n\n`;
   return content;
 }
