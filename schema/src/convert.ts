@@ -155,15 +155,16 @@ function generateServiceInterface(tag: string, operations: IOperationInfo[]): st
   operations.forEach((operInfo) => {
     const { operation } = operInfo;
     const { operationId, requestBody, parameters } = operation;
-    let paramTypes: string[] = [];
-    if (requestBody) {
-      paramTypes = [`body: ${getContentType(requestBody as RequestBodyObject)}`];
-    } else if (parameters) {
-      paramTypes = parameters.map((x) => {
+    const paramTypes: string[] = [];
+    if (parameters) {
+      parameters.forEach((x) => {
         const parameter = x as ParameterObject;
         const type = getType(parameter.schema!);
-        return `${parameter.name}: ${type}`;
+        paramTypes.push(`${parameter.name}: ${type}`);
       });
+    }
+    if (requestBody) {
+      paramTypes.push(`body: ${getContentType(requestBody as RequestBodyObject)}`);
     }
     let resultType = "void";
     const okResponse = operation.responses && operation.responses["200"];
@@ -189,13 +190,9 @@ function generateControllerFn(tag: string, operations: IOperationInfo[]): string
     )}, async (req, res) => {\n`;
     content += `    try {\n`;
 
-    let params: string[] = [];
-    if (requestBody) {
-      const bodyType = getContentType(requestBody as RequestBodyObject);
-      content += `      const body = req.body as ${bodyType};\n`;
-      params = ["body"];
-    } else if (parameters) {
-      params = parameters.map((x) => {
+    const params: string[] = [];
+    if (parameters) {
+      parameters.forEach((x) => {
         const parameter = x as ParameterObject;
         const { name: paramName, in: paramIn, schema } = parameter;
         const type = (schema! as SchemaObject).type;
@@ -218,8 +215,13 @@ function generateControllerFn(tag: string, operations: IOperationInfo[]): string
         } else {
           throw new Error("param type must be integer or string");
         }
-        return paramName;
+        params.push(paramName);
       });
+    }
+    if (requestBody) {
+      const bodyType = getContentType(requestBody as RequestBodyObject);
+      content += `      const body = req.body as ${bodyType};\n`;
+      params.push("body");
     }
     const call = `await service.${operationId}(${params.join(", ")})`;
     const okResponse = operation.responses && operation.responses["200"];
@@ -247,7 +249,6 @@ function generateController(tag: string): void {
   content += `import express, { Router } from "express";\n`;
 
   const operations = getOperationsByTag(tag);
-
   content += generateImports(operations);
   content += generateServiceInterface(tag, operations);
   content += generateControllerFn(tag, operations);
