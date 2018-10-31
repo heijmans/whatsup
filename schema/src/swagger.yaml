@@ -157,7 +157,7 @@ components:
           type: integer
           format: int64
       required:
-        - usedId
+        - userId
     IUser:
       type: object
       properties:
