@@ -1,6 +1,4 @@
-// auto generated, do not edit
-
-// tslint:disable: array-type interface-name
+// auto generated from openapi/swagger schema, do not edit
 
 export interface IAuthorizationData {
   userId: number;
@@ -21,12 +19,12 @@ export interface IUserLoginData {
   password: string;
 }
 
-export interface ILoginResult {
+export interface IUserLoginResult {
   success: boolean;
   token?: string;
 }
 
-export type IChats = Array<IChat>;
+export type IChats = IChat[];
 
 export interface IChat {
   id: number;

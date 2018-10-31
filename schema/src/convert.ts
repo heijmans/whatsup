@@ -19,7 +19,7 @@ import {
 } from "openapi3-ts";
 
 const GEN_ROOT = "src/api";
-const GEN_COMMENT = "// auto generated, do not edit\n\n";
+const GEN_COMMENT = "// auto generated from openapi/swagger schema, do not edit\n\n";
 const SERVICE_BASE = "/api";
 
 const oao: OpenAPIObject = yaml.safeLoad(fs.readFileSync("src/swagger.yaml", "utf8"));
@@ -62,7 +62,7 @@ function getType(o: SchemaObject | ReferenceObject): string {
       return type;
     } else if (type === "array") {
       const { items } = schema;
-      return `Array<${getType(items!)}>`;
+      return `${getType(items!)}[]`;
     } else {
       throw new Error("unknown type: " + type);
     }
@@ -88,7 +88,6 @@ function makeTypeDef(name: string, schema: SchemaObject): string {
 
 function generateTypes(): void {
   let content = GEN_COMMENT;
-  content += "// tslint:disable: array-type interface-name\n\n";
   each(oao.components!.schemas!, (schema, schemaKey) => {
     const { type } = schema;
     if (type === "object") {
@@ -310,7 +309,6 @@ function generateControllerFn(tag: string, operations: IOperationInfo[]): string
 
 function generateController(tag: string): void {
   let content = GEN_COMMENT;
-  content += "// tslint:disable: array-type\n\n";
 
   const operations = getOperationsByTag(tag);
   content += generateImports(operations);
@@ -335,7 +333,7 @@ function generateServiceImports(operations: IOperationInfo[]): string {
 
   const names = ["checkResponse"];
   if (hasBody) {
-    names.push("jsonBody");
+    names.push("jsonBodyHeaders");
   }
   if (hasSec) {
     names.push("jwtHeaders");
@@ -416,7 +414,7 @@ function generateServiceObject(tag: string, operations: IOperationInfo[]): strin
     if (requestBody || hasSec) {
       const headers: string[] = [];
       if (requestBody) {
-        headers.push("...jsonBody()");
+        headers.push("...jsonBodyHeaders()");
       }
       if (hasSec) {
         headers.push("...jwtHeaders(token)");
@@ -440,7 +438,6 @@ function generateServiceObject(tag: string, operations: IOperationInfo[]): strin
 
 function generateService(tag: string): void {
   let content = GEN_COMMENT;
-  content += "// tslint:disable: array-type\n\n";
 
   const operations = getOperationsByTag(tag);
   content += generateServiceImports(operations);

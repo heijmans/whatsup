@@ -4,7 +4,7 @@ export function jwtHeaders(token: string): { [key: string]: string } {
   };
 }
 
-export function jsonBody(): { [key: string]: string } {
+export function jsonBodyHeaders(): { [key: string]: string } {
   return {
     "Content-Type": "application/json",
   };

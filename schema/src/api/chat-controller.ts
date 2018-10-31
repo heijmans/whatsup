@@ -1,6 +1,4 @@
-// auto generated, do not edit
-
-// tslint:disable: array-type
+// auto generated from openapi/swagger schema, do not edit
 
 import express, { Router } from "express";
 import { getAuthorization } from "../lib/api-controller-helpers";

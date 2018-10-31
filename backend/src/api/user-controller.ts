@@ -1,15 +1,13 @@
-// auto generated, do not edit
-
-// tslint:disable: array-type
+// auto generated from openapi/swagger schema, do not edit
 
 import express, { Router } from "express";
 import { getAuthorization } from "../lib/api-controller-helpers";
-import { IAuthorizationData, ILoginResult, IUser, IUserLoginData, IUserRegisterData } from "./api-types";
+import { IAuthorizationData, IUser, IUserLoginData, IUserLoginResult, IUserRegisterData } from "./api-types";
 
 export interface IUserService {
   getUser: (authorization: IAuthorizationData) => Promise<IUser>;
   registerUser: (userRegisterData: IUserRegisterData) => Promise<IUser>;
-  login: (userLoginData: IUserLoginData) => Promise<ILoginResult>;
+  login: (userLoginData: IUserLoginData) => Promise<IUserLoginResult>;
 }
 
 export default function createUserController(service: IUserService, jwtSecret: string): Router {

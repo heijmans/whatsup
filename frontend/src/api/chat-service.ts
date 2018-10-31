@@ -1,8 +1,6 @@
-// auto generated, do not edit
+// auto generated from openapi/swagger schema, do not edit
 
-// tslint:disable: array-type
-
-import { checkResponse, jsonBody, jwtHeaders } from "../lib/api-service-helpers";
+import { checkResponse, jsonBodyHeaders, jwtHeaders } from "../lib/api-service-helpers";
 import { IChat, IChatCreateData, IChats } from "./api-types";
 
 const chatService = {
@@ -18,7 +16,7 @@ const chatService = {
   async createChat(token: string, chatCreateData: IChatCreateData): Promise<IChat> {
     const response = await fetch(`/api/chats`, {
       body: JSON.stringify(chatCreateData),
-      headers: { ...jsonBody(), ...jwtHeaders(token) },
+      headers: { ...jsonBodyHeaders(), ...jwtHeaders(token) },
       method: "POST",
     });
     checkResponse(response);
