@@ -191,18 +191,25 @@ function generateServiceInterface(tag: string, operations: IOperationInfo[]): st
   let content = `export interface ${service} {\n`;
   operations.forEach((operInfo) => {
     const { operation } = operInfo;
-    const { operationId, requestBody, parameters } = operation;
+    const { operationId, parameters } = operation;
+    const requestBody = operation.requestBody as RequestBodyObject;
     const paramTypes: string[] = [];
     if (parameters) {
       parameters.forEach((x) => {
         const parameter = x as ParameterObject;
+        if (! parameter.required) {
+          throw new Error("cannot handle optional parameters");
+        }
         const type = getType(parameter.schema!);
         paramTypes.push(`${parameter.name}: ${type}`);
       });
     }
     if (requestBody) {
-      const bodyName = getBodyName(requestBody as RequestBodyObject);
-      const bodyType = getContentType(requestBody as RequestBodyObject);
+      if (!requestBody.required) {
+        throw new Error("cannot handle optional request body");
+      }
+      const bodyName = getBodyName(requestBody);
+      const bodyType = getContentType(requestBody);
       paramTypes.push(`${bodyName}: ${bodyType}`);
     }
     let resultType = "void";
@@ -223,7 +230,8 @@ function generateControllerFn(tag: string, operations: IOperationInfo[]): string
   content += `  const router = express.Router();\n\n`;
   operations.forEach((operInfo) => {
     const { method, path, operation } = operInfo;
-    const { operationId, requestBody, parameters } = operation;
+    const { operationId, parameters } = operation;
+    const requestBody = operation.requestBody as RequestBodyObject;
     const expressPath = path.replace(/\{(\w+)\}/, ":$1");
     content += `  router.${method.toLowerCase()}(${JSON.stringify(
       expressPath,
@@ -271,8 +279,8 @@ function generateControllerFn(tag: string, operations: IOperationInfo[]): string
       });
     }
     if (requestBody) {
-      const bodyName = getBodyName(requestBody as RequestBodyObject);
-      const bodyType = getContentType(requestBody as RequestBodyObject);
+      const bodyName = getBodyName(requestBody);
+      const bodyType = getContentType(requestBody);
       content += `      const ${bodyName} = req.body as ${bodyType};\n`;
       params.push(bodyName);
     }
