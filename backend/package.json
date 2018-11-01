@@ -41,7 +41,9 @@
     "pq": "yarn pretty-quick",
     "prettier": "prettier --write 'src/**/*.ts' 'src/**/*.js*' '*.js*' 'config/*.js*'",
     "server": "ts-node src/server.ts",
+    "server:mock": "ts-node src/mock/server.ts",
     "start": "nodemon -w src -e ts,js -x 'yarn server'",
+    "start:mock": "nodemon -w src -e ts,js -x 'yarn server:mock'",
     "test": "jest --forceExit --detectOpenHandles --watch"
   },
   "jest": {
