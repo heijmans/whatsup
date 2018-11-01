@@ -32,7 +32,6 @@ const userService = {
     checkResponse(response);
     return await response.json();
   },
-
 };
 
 export default userService;
