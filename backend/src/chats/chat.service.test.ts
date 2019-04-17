@@ -30,17 +30,17 @@ describe("chat service", () => {
   });
 
   it("should get a chat", async () => {
-    toSpy(Chat.findById).mockResolvedValue(MOCK_CHAT1);
+    toSpy(Chat.findByPk).mockResolvedValue(MOCK_CHAT1);
     const chat = await chatService.getChat(5);
-    expect(toSpy(Chat.findById)).toHaveBeenCalledWith(5);
+    expect(toSpy(Chat.findByPk)).toHaveBeenCalledWith(5);
     expect(chat).toEqual(MOCK_CHAT1);
   });
 
   it("should delete a chat", async () => {
     const mockChat = { destroy: jest.fn().mockResolvedValue(undefined) };
-    toSpy(Chat.findById).mockResolvedValue(mockChat);
+    toSpy(Chat.findByPk).mockResolvedValue(mockChat);
     await chatService.deleteChat(5);
-    expect(toSpy(Chat.findById)).toHaveBeenCalledWith(5);
+    expect(toSpy(Chat.findByPk)).toHaveBeenCalledWith(5);
     expect(mockChat.destroy).toHaveBeenCalledWith();
   });
 });

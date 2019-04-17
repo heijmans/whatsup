@@ -12,11 +12,11 @@ jest.mock("../users/user.model", () => new MockModel());
 const mockController = toMockRouter(wsController);
 
 async function openWS(username: string): Promise<MockWS> {
-  toSpy(User.findById).mockResolvedValue({ id: 15, username });
+  toSpy(User.findByPk).mockResolvedValue({ id: 15, username });
   const ws = mockController.doWS("/");
   const token = jwt.sign({ userId: 15 }, secrets.jwt);
   await ws.receive({ type: "TOKEN", token });
-  expect(User.findById).toHaveBeenCalledWith(15);
+  expect(User.findByPk).toHaveBeenCalledWith(15);
   return ws;
 }
 

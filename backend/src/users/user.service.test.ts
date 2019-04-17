@@ -16,9 +16,9 @@ const MOCK_USER = {
 
 describe("user service", () => {
   it("should get the user", async () => {
-    toSpy(User.findById).mockResolvedValue(MOCK_USER);
+    toSpy(User.findByPk).mockResolvedValue(MOCK_USER);
     const user = await userService.getUser({ userId: 10 });
-    expect(toSpy(User.findById)).toHaveBeenCalledWith(10);
+    expect(toSpy(User.findByPk)).toHaveBeenCalledWith(10);
     expect(user).toEqual(MOCK_USER);
   });
 

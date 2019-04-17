@@ -6,7 +6,7 @@ function toIChat({ id, name }: Chat): IChat {
 }
 
 async function getChat(id: number): Promise<Chat> {
-  const chat = await Chat.findById(id);
+  const chat = await Chat.findByPk(id);
   if (!chat) {
     throw new Error("not found");
   }
@@ -15,7 +15,7 @@ async function getChat(id: number): Promise<Chat> {
 
 const chatService = {
   async listChats(): Promise<IChats> {
-    const chats = await Chat.findAll({ order: [["name"]] });
+    const chats = await Chat.findAll({ order: [["name", "ASC"]] });
     return chats.map(toIChat);
   },
 

@@ -9,7 +9,7 @@ export function toSpy(x: any): jest.SpyInstance {
 export class MockModel {
   public create = jest.fn();
   public findAll = jest.fn();
-  public findById = jest.fn();
+  public findByPk = jest.fn();
 
   constructor(...extraFields: string[]) {
     extraFields.forEach((field) => {

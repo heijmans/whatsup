@@ -15,7 +15,7 @@ function toIUser({ id, username }: User): IUser {
 
 const userService = {
   async getUser({ userId }: IAuthorizationData): Promise<IUser> {
-    const user = await User.findById(userId);
+    const user = await User.findByPk(userId);
     if (!user) {
       throw new Error("not found");
     }
