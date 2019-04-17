@@ -18,7 +18,7 @@ describe("chat service", () => {
   it("should get all chats", async () => {
     toSpy(Chat.findAll).mockResolvedValue(MOCK_CHATS);
     const chats = await chatService.listChats();
-    expect(toSpy(Chat.findAll)).toHaveBeenCalledWith({ order: [["name"]] });
+    expect(toSpy(Chat.findAll)).toHaveBeenCalledWith({ order: [["name", "ASC"]] });
     expect(chats).toEqual(MOCK_CHATS);
   });
 
