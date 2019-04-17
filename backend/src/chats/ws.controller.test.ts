@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import secrets from "../../config/secrets";
 import { MockModel, MockRouter, MockWS, toMockRouter, toSpy } from "../lib/test-helpers";
 import User from "../users/user.model";
+import userService from "../users/user.service";
 import wsController from "./ws.controller";
 
 jest.mock("express", () => ({
@@ -9,7 +10,7 @@ jest.mock("express", () => ({
 }));
 jest.mock("../users/user.model", () => new MockModel());
 
-const mockController = toMockRouter(wsController);
+const mockController = toMockRouter(wsController(userService, secrets.jwt));
 
 async function openWS(username: string): Promise<MockWS> {
   toSpy(User.findByPk).mockResolvedValue({ id: 15, username });
