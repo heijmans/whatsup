@@ -52,7 +52,7 @@ function handleAction(client: IClient, action: Action): void {
   });
 }
 
-export default function creatWsController(userService: IUserService, jwtSecret: string): Router {
+export default function createWsController(userService: IUserService, jwtSecret: string): Router {
   const router = express.Router();
 
   router.ws("/", (ws, _) => {
